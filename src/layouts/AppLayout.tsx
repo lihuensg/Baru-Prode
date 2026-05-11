@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
 import {
   LayoutDashboard, Users, Calendar, Trophy, ClipboardList,
-  LogOut, ChevronRight, Menu, X, Shield
+  LogOut, ChevronRight, Menu, Shield
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';

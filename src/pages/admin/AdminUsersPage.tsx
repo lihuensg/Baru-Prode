@@ -4,7 +4,7 @@ import { Plus, Pencil, Power, X, Check } from 'lucide-react';
 import { AppLayout } from '../../layouts/AppLayout';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { EmptyState } from '../../components/ui/EmptyState';
-import { StatusBadge, PaymentStatusBadge, ActiveBadge } from '../../components/ui/StatusBadge';
+import { PaymentStatusBadge, ActiveBadge } from '../../components/ui/StatusBadge';
 import { usersService } from '../../services/usersService';
 import type { User, PaymentStatus } from '../../types';
 
@@ -19,9 +19,7 @@ interface UserFormData {
   paymentStatus: PaymentStatus;
 }
 
-const emptyForm: UserFormData = {
-  fullName: '', username: '', password: '', email: '', phone: '', paymentStatus: 'PENDING',
-};
+
 
 interface UserModalProps {
   user?: User;

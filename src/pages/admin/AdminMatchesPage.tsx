@@ -21,10 +21,7 @@ interface MatchFormData {
   venue: string;
 }
 
-const emptyMatchForm: MatchFormData = {
-  group: 'A', homeTeam: '', awayTeam: '', homeFlag: '🏳️', awayFlag: '🏳️',
-  date: '', time: '15:00', status: 'SCHEDULED', venue: '',
-};
+
 
 interface MatchModalProps {
   match?: Match;
