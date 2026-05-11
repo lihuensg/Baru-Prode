@@ -116,7 +116,7 @@ export function LandingPage() {
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white shadow-md mb-4`}>
                   {card.icon}
                 </div>
-                <div className="text-4xl font-black text-slate-100 mb-2 font-display">{card.number}</div>
+                <div className="text-4xl font-black text-slate-300 mb-2 font-display">{card.number}</div>
                 <h3 className="text-xl font-bold text-slate-800 mb-2">{card.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{card.description}</p>
               </div>
