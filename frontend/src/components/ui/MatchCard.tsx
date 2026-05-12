@@ -49,10 +49,10 @@ export function MatchCard({
       </div>
 
       {/* Teams */}
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <div className="flex-1 text-center">
+      <div className="flex items-center justify-between gap-2 mb-3 min-w-0">
+        <div className="flex-1 min-w-0 text-center">
           <div className="text-2xl mb-0.5">{match.homeFlag}</div>
-          <p className="text-sm font-semibold text-slate-800 leading-tight">{match.homeTeam}</p>
+          <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.homeTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Local</p>
         </div>
         <div className="flex flex-col items-center px-2">
@@ -66,9 +66,9 @@ export function MatchCard({
             </span>
           )}
         </div>
-        <div className="flex-1 text-center">
+        <div className="flex-1 min-w-0 text-center">
           <div className="text-2xl mb-0.5">{match.awayFlag}</div>
-          <p className="text-sm font-semibold text-slate-800 leading-tight">{match.awayTeam}</p>
+          <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.awayTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Visitante</p>
         </div>
       </div>

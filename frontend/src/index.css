@@ -9,6 +9,15 @@ html, body {
   -webkit-text-size-adjust: 100%; /* prevent iOS from resizing text */
 }
 
+img, video, canvas, svg {
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 /* iOS zoom fix: inputs with font-size < 16px trigger automatic zoom. Set sensible minimum */
 input, select, textarea, button {
   font-size: 16px;

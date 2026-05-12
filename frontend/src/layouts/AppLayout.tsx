@@ -159,7 +159,7 @@ export function AppLayout({ children, variant }: AppLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
+        <main className="flex-1 p-6 max-w-6xl mx-auto w-full min-w-0 overflow-x-hidden">
           {children}
         </main>
       </div>

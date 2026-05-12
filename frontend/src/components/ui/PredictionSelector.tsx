@@ -29,7 +29,7 @@ export function PredictionSelector({
   size = 'md',
 }: PredictionSelectorProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       {OPTIONS.map(({ choice, label, shortLabel }) => {
         const isSelected = value === choice;
         return (
@@ -40,7 +40,7 @@ export function PredictionSelector({
             onClick={() => !disabled && onChange?.(choice)}
             title={label}
             className={clsx(
-              'prediction-btn flex-1 rounded-lg font-medium border-2 transition-all',
+              'prediction-btn flex-1 min-w-0 rounded-lg font-medium border-2 transition-all',
               size === 'md' ? 'px-3 py-2 text-sm' : 'px-2 py-1.5 text-xs',
               isSelected
                 ? selectedClass[choice]
