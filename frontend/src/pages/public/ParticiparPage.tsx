@@ -50,7 +50,7 @@ export function ParticiparPage() {
                   {
                     step: '04',
                     title: '¡Empezá a pronosticar!',
-                    description: 'Ingresás con tu usuario y empezás a cargar tus pronósticos para la fase de grupos y el resto del Mundial.',
+                    description: 'Ingresás con tu usuario y empezás a cargar tus pronósticos para la fase de grupos.',
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
