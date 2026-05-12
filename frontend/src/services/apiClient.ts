@@ -1,6 +1,10 @@
 const DEFAULT_API_URL = 'http://localhost:3000/api';
 
-export const API_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+// Normalize API URL so it always points to the /api root.
+const rawApiUrl = String(import.meta.env.VITE_API_URL || DEFAULT_API_URL);
+export const API_URL = rawApiUrl.replace(/\/$/, '').endsWith('/api')
+  ? rawApiUrl.replace(/\/$/, '')
+  : rawApiUrl.replace(/\/$/, '') + '/api';
 export const USE_MOCKS = String(import.meta.env.VITE_USE_MOCKS ?? 'true') === 'true';
 
 import ApiError from '../utils/ApiError';
