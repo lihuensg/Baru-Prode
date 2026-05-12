@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, X, Check, Calendar, Clock } from 'lucide-react';
+import { Plus, Pencil, X, Check, Calendar, Clock, Trash2, AlertTriangle } from 'lucide-react';
 import { AppLayout } from '../../layouts/AppLayout';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
@@ -27,6 +27,13 @@ interface MatchModalProps {
   match?: Match;
   onClose: () => void;
   onSave: (data: MatchFormData) => void | Promise<void>;
+}
+
+interface DeleteModalProps {
+  match: Match;
+  loading?: boolean;
+  onClose: () => void;
+  onConfirm: () => void | Promise<void>;
 }
 
 function MatchModal({ match, onClose, onSave }: MatchModalProps) {
@@ -134,11 +141,64 @@ function MatchModal({ match, onClose, onSave }: MatchModalProps) {
   );
 }
 
+function DeleteMatchModal({ match, loading = false, onClose, onConfirm }: DeleteModalProps) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/55 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-fade-in-up">
+        <div className="flex items-center gap-3 px-6 pt-6">
+          <div className="w-11 h-11 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+            <AlertTriangle className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-black text-slate-900">Eliminar partido</h2>
+            <p className="text-sm text-slate-500">Acción irreversible</p>
+          </div>
+        </div>
+
+        <div className="px-6 py-4">
+          <p className="text-sm text-slate-700 leading-6">
+            ¿Estás seguro de eliminar este partido? <br />
+            <span className="font-semibold text-slate-900">
+              Esta acción no se puede deshacer.
+            </span>
+          </p>
+          <div className="mt-4 rounded-2xl bg-slate-50 border border-slate-100 p-4">
+            <p className="text-sm font-semibold text-slate-900">{match.homeTeam} vs {match.awayTeam}</p>
+            <p className="text-xs text-slate-500 mt-1">Grupo {match.group} · {match.date} {match.time}</p>
+          </div>
+        </div>
+
+        <div className="flex gap-3 px-6 pb-6">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+            disabled={loading}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => void onConfirm()}
+            disabled={loading}
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-red-700 disabled:opacity-60 transition-colors shadow-sm"
+          >
+            <Trash2 className="w-4 h-4" />
+            {loading ? 'Eliminando...' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export function AdminMatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [modal, setModal] = useState<{ open: boolean; match?: Match }>({ open: false });
+  const [deleteModal, setDeleteModal] = useState<{ open: boolean; match?: Match }>({ open: false });
+  const [deleting, setDeleting] = useState(false);
   const [filterGroup, setFilterGroup] = useState<string>('all');
 
   const groups = [...new Set(matches.map(match => match.group))].sort();
@@ -163,6 +223,22 @@ export function AdminMatchesPage() {
       setModal({ open: false });
     } catch (err) {
       showErrorToast(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteModal.match) return;
+
+    setDeleting(true);
+    try {
+      await matchesService.delete(deleteModal.match.id);
+      showSuccessToast('Partido eliminado correctamente.');
+      setDeleteModal({ open: false });
+      void refresh();
+    } catch (err) {
+      showErrorToast(err);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -238,12 +314,22 @@ export function AdminMatchesPage() {
                     <StatusBadge type="match" value={match.status} />
                   </td>
                   <td className="px-4 py-3.5 text-right">
-                    <button
-                      onClick={() => setModal({ open: true, match })}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-blue-600 transition-colors"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => setModal({ open: true, match })}
+                        className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-blue-600 transition-colors"
+                        aria-label="Editar partido"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteModal({ open: true, match })}
+                        className="p-1.5 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-600 transition-colors"
+                        aria-label="Eliminar partido"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -257,6 +343,15 @@ export function AdminMatchesPage() {
           match={modal.match}
           onClose={() => setModal({ open: false })}
           onSave={handleSave}
+        />
+      )}
+
+      {deleteModal.open && deleteModal.match && (
+        <DeleteMatchModal
+          match={deleteModal.match}
+          loading={deleting}
+          onClose={() => !deleting && setDeleteModal({ open: false })}
+          onConfirm={handleDelete}
         />
       )}
     </AppLayout>

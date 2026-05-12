@@ -176,6 +176,27 @@ export async function updateAdminMatch(id: string, data: {
   return mapMatch(updated);
 }
 
+export async function deleteAdminMatch(id: string) {
+  const current = await prisma.match.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      tournamentId: true,
+      _count: { select: { predictions: true } },
+    },
+  });
+
+  if (!current) {
+    throw new AppError('Partido no encontrado', 404);
+  }
+
+  if (current._count.predictions > 0) {
+    throw new AppError('No se puede eliminar un partido con pronósticos cargados.', 400);
+  }
+
+  await prisma.match.delete({ where: { id } });
+}
+
 export async function setMatchResult(id: string, result: PredictionChoice) {
   const match = await prisma.match.findUnique({
     where: { id },

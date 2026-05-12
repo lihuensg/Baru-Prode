@@ -161,6 +161,19 @@ export const matchesService = {
     return mapMatch(response.match);
   },
 
+  async delete(id: string): Promise<void> {
+    if (USE_MOCKS) {
+      const matches = loadMatches();
+      const next = matches.filter(match => match.id !== id);
+      saveMatches(next);
+      return;
+    }
+
+    await apiFetch<{ message: string }>(`/admin/matches/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
   async getStats() {
     if (USE_MOCKS) {
       const matches = loadMatches();

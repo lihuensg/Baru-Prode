@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createAdminMatch, getLastResults, getMatchStats, listAdminMatches, setMatchResult, updateAdminMatch } from './matches.service.js';
+import { createAdminMatch, deleteAdminMatch, getLastResults, getMatchStats, listAdminMatches, setMatchResult, updateAdminMatch } from './matches.service.js';
 
 export async function listMatchesController(req: Request, res: Response) {
   const { group, status } = req.query as { group?: string; status?: 'SCHEDULED' | 'LIVE' | 'FINISHED' };
@@ -20,6 +20,11 @@ export async function updateMatchController(req: Request, res: Response) {
 export async function setResultController(req: Request, res: Response) {
   const match = await setMatchResult(req.params.id as string, req.body.result);
   res.json({ match });
+}
+
+export async function deleteMatchController(req: Request, res: Response) {
+  await deleteAdminMatch(req.params.id as string);
+  res.json({ message: 'Partido eliminado correctamente.' });
 }
 
 export async function matchStatsController(_req: Request, res: Response) {
