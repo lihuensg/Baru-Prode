@@ -1,6 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* Mobile / accessibility fixes to avoid unwanted zoom and horizontal scroll */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%; /* prevent iOS from resizing text */
+}
+
+/* iOS zoom fix: inputs with font-size < 16px trigger automatic zoom. Set sensible minimum */
+input, select, textarea, button {
+  font-size: 16px;
+}
+
+/* Ensure interactive elements don't cause layout jumps on mobile */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
 @theme {
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Outfit', sans-serif;
