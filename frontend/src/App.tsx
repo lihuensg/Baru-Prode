@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './hooks/useAuth';
+import { BackendLoadingProvider } from './contexts/BackendLoadingContext';
+import { BackendLoader } from './components/ui/BackendLoader';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
 // Public pages
@@ -25,6 +27,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <BackendLoadingProvider>
+          <BackendLoader />
         {/* Toast notifications */}
         <Toaster
           position="top-right"
@@ -46,7 +50,7 @@ export default function App() {
           }}
         />
 
-        <Routes>
+          <Routes>
           {/* ── Public ─────────────────────────────────── */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -123,7 +127,8 @@ export default function App() {
 
           {/* ── Fallback ───────────────────────────────── */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          </Routes>
+        </BackendLoadingProvider>
       </AuthProvider>
     </BrowserRouter>
   );
