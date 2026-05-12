@@ -12,6 +12,8 @@ import { rankingRouter } from './modules/ranking/ranking.routes.js';
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { settingsRouter } from './modules/settings/settings.routes.js';
 import { notFoundMiddleware, errorMiddleware } from './middlewares/error.middleware.js';
+import path from 'path';
+import fs from 'fs';
 
 export const app = express();
 
@@ -52,6 +54,19 @@ app.use('/api/admin/matches', matchesRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/ranking', rankingRouter);
 app.use('/api/settings', settingsRouter);
+
+// Serve frontend SPA if built in workspace (optional fallback)
+try {
+  const frontDist = path.join(process.cwd(), 'frontend', 'dist');
+  if (fs.existsSync(frontDist)) {
+    app.use(express.static(frontDist));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(frontDist, 'index.html'));
+    });
+  }
+} catch (err) {
+  // best-effort: ignore errors here
+}
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
