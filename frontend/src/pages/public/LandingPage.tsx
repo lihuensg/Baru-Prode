@@ -14,7 +14,7 @@ export function LandingPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-300/10 rounded-full -translate-x-1/4 translate-y-1/4 blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-28 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-blue-200 text-sm font-medium px-4 py-1.5 rounded-full mb-8 animate-fade-in">
             <Star className="w-3.5 h-3.5 text-amber-400" />
@@ -22,15 +22,15 @@ export function LandingPage() {
           </div>
 
           {/* Main title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white font-display leading-none mb-4 animate-fade-in-up">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black text-white font-display leading-tight sm:leading-none mb-4 animate-fade-in-up break-words">
             Club Deportivo Barú
           </h1>
 
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white/90 mb-4 animate-fade-in-up delay-100">
+          <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white/90 mb-4 animate-fade-in-up delay-100 break-words">
             Prode Mundial 2026
           </h2>
 
-          <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto mb-10 animate-fade-in-up delay-200">
+          <p className="text-sm sm:text-lg text-white/80 max-w-xl mx-auto mb-10 animate-fade-in-up delay-200 break-words">
             Participá, pronosticá los partidos y competí por el ranking del club.
           </p>
 
@@ -48,17 +48,17 @@ export function LandingPage() {
           )}
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-300">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in-up delay-300 max-w-md mx-auto sm:max-w-none">
             <Link
               to="/participar"
-              className="inline-flex items-center justify-center gap-2 bg-white text-blue-800 hover:bg-blue-50 font-bold px-8 py-3.5 rounded-2xl text-base shadow-xl hover:shadow-2xl transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 bg-white text-blue-800 hover:bg-blue-50 font-bold px-6 sm:px-8 py-3.5 rounded-2xl text-base shadow-xl hover:shadow-2xl transition-all hover:-translate-y-0.5 w-full sm:w-auto"
             >
               Participar ahora
               <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
               to="/ranking"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur text-white hover:bg-white/20 border border-white/30 font-semibold px-8 py-3.5 rounded-2xl text-base transition-all"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur text-white hover:bg-white/20 border border-white/30 font-semibold px-6 sm:px-8 py-3.5 rounded-2xl text-base transition-all w-full sm:w-auto"
             >
               <Trophy className="w-4 h-4 text-amber-400" />
               Ver ranking
@@ -78,10 +78,10 @@ export function LandingPage() {
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-display mb-3">
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 font-display mb-3 break-words">
               ¿Cómo se juega?
             </h2>
-            <p className="text-slate-500 text-lg">Tres pasos simples para sumar puntos</p>
+            <p className="text-slate-500 text-base sm:text-lg break-words">Tres pasos simples para sumar puntos</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -159,9 +159,9 @@ export function LandingPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-400 rounded-2xl shadow-xl mb-6">
             <Trophy className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white font-display mb-3">Premio del torneo</h2>
-          <p className="text-white/90 text-lg mb-4 font-medium">Demostrá cuánto sabés de fútbol</p>
-          <p className="text-white/80 text-base max-w-lg mx-auto">
+          <h2 className="text-2xl sm:text-4xl font-black text-white font-display mb-3 break-words">Premio del torneo</h2>
+          <p className="text-white/90 text-base sm:text-lg mb-4 font-medium break-words">Demostrá cuánto sabés de fútbol</p>
+          <p className="text-white/80 text-sm sm:text-base max-w-lg mx-auto break-words">
             El ganador se lleva el reconocimiento del club y un premio especial al cierre del Mundial.
           </p>
         </div>

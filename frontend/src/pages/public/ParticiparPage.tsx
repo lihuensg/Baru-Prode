@@ -17,17 +17,17 @@ function WhatsAppIcon() {
 export function ParticiparPage() {
   return (
     <PublicLayout>
-      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-lg animate-fade-in-up">
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-8 sm:py-12">
+        <div className="w-full max-w-lg max-w-full animate-fade-in-up">
+          <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden max-w-full">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-8 py-8 text-center">
-              <div className="text-5xl mb-3">⚽</div>
-              <h1 className="text-white text-2xl font-black font-display">¿Cómo participar?</h1>
+            <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-5 sm:px-8 py-7 sm:py-8 text-center">
+              <div className="text-4xl sm:text-5xl mb-3">⚽</div>
+              <h1 className="text-white text-xl sm:text-2xl font-black font-display break-words">¿Cómo participar?</h1>
               <p className="text-blue-200 text-sm mt-1">Prode Mundial 2026 · Club Deportivo Barú</p>
             </div>
 
-            <div className="px-8 py-8">
+            <div className="px-5 sm:px-8 py-7 sm:py-8">
               {/* Steps */}
               <div className="space-y-5 mb-8">
                 {[
@@ -53,26 +53,26 @@ export function ParticiparPage() {
                     description: 'Ingresás con tu usuario y empezás a cargar tus pronósticos para la fase de grupos.',
                   },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
+                  <div key={i} className="flex items-start gap-4 min-w-0">
                     <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
                       {item.icon || <span className="text-blue-600 font-black text-sm">{item.step}</span>}
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-xs font-bold text-blue-400 mb-0.5">PASO {item.step}</p>
-                      <p className="font-semibold text-slate-800 text-sm">{item.title}</p>
-                      <p className="text-slate-500 text-sm mt-0.5">{item.description}</p>
+                      <p className="font-semibold text-slate-800 text-sm break-words">{item.title}</p>
+                      <p className="text-slate-500 text-sm mt-0.5 break-words">{item.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Info box */}
-              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-6">
+              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 sm:p-5 mb-6 max-w-full">
                 <div className="flex items-start gap-3">
                   <MessageCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-semibold text-blue-800 text-sm mb-1">No existe registro libre</p>
-                    <p className="text-blue-700 text-sm">
+                    <p className="text-blue-700 text-sm break-words">
                       Los usuarios son creados exclusivamente por el administrador del club luego de verificar correctamente el pago de la inscripción.
                     </p>
                   </div>
@@ -84,7 +84,7 @@ export function ParticiparPage() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group mb-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] px-5 py-4 font-bold text-white shadow-[0_12px_30px_rgba(37,211,102,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#22c55e] hover:shadow-[0_16px_36px_rgba(37,211,102,0.36)] active:translate-y-0"
+                className="group mb-6 flex w-full max-w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] px-4 sm:px-5 py-4 font-bold text-white shadow-[0_12px_30px_rgba(37,211,102,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#22c55e] hover:shadow-[0_16px_36px_rgba(37,211,102,0.36)] active:translate-y-0"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/20 transition-transform duration-200 group-hover:scale-105">
                   <WhatsAppIcon />
@@ -96,7 +96,7 @@ export function ParticiparPage() {
               <div className="space-y-3">
                 <Link
                   to="/login"
-                  className="w-full flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition-colors shadow-sm"
+                  className="w-full max-w-full flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition-colors shadow-sm"
                 >
                   <LogIn className="w-4 h-4" />
                   Ya tengo usuario — Iniciar sesión

@@ -76,7 +76,7 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in-up">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in-up max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <h2 className="font-bold text-slate-800">{user ? 'Editar usuario' : 'Crear usuario'}</h2>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
@@ -257,7 +257,8 @@ export function AdminUsersPage() {
             }
           />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
@@ -323,6 +324,58 @@ export function AdminUsersPage() {
               </tbody>
             </table>
           </div>
+
+          <div className="md:hidden divide-y divide-slate-100">
+            {users.map(user => (
+              <div key={user.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                        {user.fullName.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-800 truncate">{user.fullName}</p>
+                        <p className="text-xs text-slate-400 truncate">@{user.username}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <PaymentStatusBadge status={user.paymentStatus} />
+                      <ActiveBadge isActive={user.isActive} />
+                    </div>
+
+                    <div className="mt-3 text-xs text-slate-500 space-y-1">
+                      <p>{user.phone || '—'}</p>
+                      <p className="truncate">{user.email || '—'}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 shrink-0">
+                    <button
+                      onClick={() => setModal({ open: true, user })}
+                      className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-blue-600 transition-colors"
+                      title="Editar"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleToggle(user)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        user.isActive
+                          ? 'hover:bg-red-50 text-slate-400 hover:text-red-500'
+                          : 'hover:bg-emerald-50 text-slate-400 hover:text-emerald-600'
+                      }`}
+                      title={user.isActive ? 'Desactivar' : 'Activar'}
+                    >
+                      <Power className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          </>
         )}
       </div>
 

@@ -33,7 +33,7 @@ function RankMedal({ position }: { position: number }) {
 export function RankingTable({ entries, highlightUserId }: RankingTableProps) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="bg-gradient-to-r from-blue-800 to-blue-700 text-white">
@@ -101,6 +101,51 @@ export function RankingTable({ entries, highlightUserId }: RankingTableProps) {
             })}
           </tbody>
         </table>
+      </div>
+      <div className="md:hidden divide-y divide-slate-100">
+        {entries.map((entry, idx) => {
+          const isHighlighted = entry.userId === highlightUserId;
+          const isTop3 = entry.position <= 3;
+
+          return (
+            <div
+              key={entry.userId}
+              className={clsx(
+                'p-4',
+                isHighlighted ? 'bg-blue-50' : idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
+              )}
+            >
+              <div className="flex items-start gap-3 min-w-0">
+                <RankMedal position={entry.position} />
+                <div className={clsx(
+                  'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0',
+                  isTop3 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'
+                )}>
+                  {entry.fullName.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className={clsx('font-semibold text-sm break-words', isHighlighted ? 'text-blue-800' : 'text-slate-800')}>
+                    {entry.fullName}
+                    {isHighlighted && <span className="ml-2 text-xs text-blue-500 font-normal">(vos)</span>}
+                  </p>
+                  <p className="text-xs text-slate-400 break-words">@{entry.username}</p>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className={clsx('inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-bold', isTop3 ? 'bg-blue-700 text-white shadow-sm' : 'bg-slate-100 text-slate-700')}>
+                      {entry.totalPoints} pts
+                    </span>
+                    <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
+                      {entry.totalCorrect} aciertos
+                    </span>
+                    <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                      {entry.totalPredicted} pronosticados
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       {entries.length === 0 && (
         <div className="py-12 text-center text-slate-400 text-sm">

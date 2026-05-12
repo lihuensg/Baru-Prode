@@ -15,7 +15,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col bg-white">
       {/* Topbar */}
       <header className="sticky top-0 z-30 glass border-b border-white/20 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <div className="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center shadow-sm">
               <span className="text-white font-black text-sm">CB</span>
@@ -26,25 +26,25 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             </div>
           </Link>
 
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center justify-between gap-2 w-full sm:w-auto sm:justify-end flex-wrap">
             <Link
               to="/ranking"
-              className="text-slate-600 hover:text-blue-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+              className="text-slate-600 hover:text-blue-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors whitespace-nowrap"
             >
               Ranking
             </Link>
             {isAuthenticated ? (
               <button
                 onClick={handleDashboard}
-                className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm min-w-0"
               >
-                {user?.fullName.split(' ')[0]}
+                <span className="truncate max-w-[9rem]">{user?.fullName.split(' ')[0]}</span>
                 <span className="text-blue-200">→</span>
               </button>
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm whitespace-nowrap"
               >
                 <LogIn className="w-4 h-4" />
                 Iniciar sesión

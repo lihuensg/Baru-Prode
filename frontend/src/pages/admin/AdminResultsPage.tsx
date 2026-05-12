@@ -62,10 +62,10 @@ export function AdminResultsPage() {
       />
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
           <h3 className="font-bold text-slate-800 text-sm">Fuente de resultados</h3>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold shadow-sm">
             <ClipboardCheck className="w-4 h-4" />
             Manual
@@ -102,19 +102,19 @@ export function AdminResultsPage() {
         <div className="space-y-3 mb-8">
           {scheduledMatches.map(match => (
             <div key={match.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex-1">
+              <div className="flex flex-col gap-4">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Grupo {match.group}</span>
                     <StatusBadge type="match" value={match.status} />
                   </div>
-                  <p className="font-semibold text-slate-800 text-sm">
+                  <p className="font-semibold text-slate-800 text-sm break-words">
                     {match.homeFlag} {match.homeTeam} <span className="text-slate-400">vs</span> {match.awayTeam} {match.awayFlag}
                   </p>
                   <p className="text-xs text-slate-400 mt-0.5">{match.date} · {match.time}</p>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <div className="w-56">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-shrink-0 w-full">
+                  <div className="w-full sm:w-56">
                     <PredictionSelector
                       homeTeam={match.homeTeam}
                       awayTeam={match.awayTeam}
@@ -131,7 +131,7 @@ export function AdminResultsPage() {
                       }
                       void handleSetResult(match, pendingResults[match.id]);
                     }}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors flex-shrink-0"
+                    className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors flex-shrink-0"
                   >
                     Confirmar
                   </button>
@@ -152,16 +152,16 @@ export function AdminResultsPage() {
         ) : (
           <div className="divide-y divide-slate-50">
             {finishedMatches.map(match => (
-              <div key={match.id} className="px-5 py-3.5 flex items-center gap-4 flex-wrap">
+              <div key={match.id} className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Grupo {match.group}</span>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-slate-800 break-words">
                       {match.homeFlag} {match.homeTeam} vs {match.awayTeam} {match.awayFlag}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2 flex-wrap flex-shrink-0">
                   {match.result && (
                     <span className="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
                       {choiceLabel[match.result]}

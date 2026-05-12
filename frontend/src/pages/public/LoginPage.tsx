@@ -53,20 +53,20 @@ export function LoginPage() {
 
   return (
     <PublicLayout>
-      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md animate-fade-in-up">
+      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4 py-8 sm:py-12">
+        <div className="w-full max-w-md max-w-full animate-fade-in-up">
           {/* Card */}
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden max-w-full">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-8 py-8 text-center">
+            <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-5 sm:px-8 py-7 sm:py-8 text-center">
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
                 <span className="text-blue-700 font-black text-lg">CB</span>
               </div>
-              <h1 className="text-white text-2xl font-black font-display">Iniciar sesión</h1>
+              <h1 className="text-white text-xl sm:text-2xl font-black font-display break-words">Iniciar sesión</h1>
               <p className="text-blue-200 text-sm mt-1">Club Deportivo Barú · Prode 2026</p>
             </div>
 
-            <div className="px-8 py-7">
+            <div className="px-5 sm:px-8 py-6 sm:py-7">
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4 mb-6">
                 <div>

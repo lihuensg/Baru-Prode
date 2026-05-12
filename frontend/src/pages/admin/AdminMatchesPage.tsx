@@ -278,7 +278,7 @@ export function AdminMatchesPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
@@ -335,6 +335,51 @@ export function AdminMatchesPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="md:hidden divide-y divide-slate-100">
+          {filtered.map(match => (
+            <div key={match.id} className="p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 min-w-0">
+                    <span className="shrink-0">{match.homeFlag}</span>
+                    <span className="truncate">{match.homeTeam}</span>
+                    <span className="text-slate-400 text-xs font-bold shrink-0">vs</span>
+                    <span className="truncate">{match.awayTeam}</span>
+                    <span className="shrink-0">{match.awayFlag}</span>
+                  </div>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{match.group}</span>
+                    <StatusBadge type="match" value={match.status} />
+                  </div>
+
+                  <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
+                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{match.date}</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{match.time}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 shrink-0">
+                  <button
+                    onClick={() => setModal({ open: true, match })}
+                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-blue-600 transition-colors"
+                    aria-label="Editar partido"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setDeleteModal({ open: true, match })}
+                    className="p-2 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-600 transition-colors"
+                    aria-label="Eliminar partido"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

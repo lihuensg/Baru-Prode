@@ -184,7 +184,7 @@ export function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
         <AdminStatCard
           label="Participantes"
           value={dashboard.stats.totalUsers}
@@ -236,10 +236,10 @@ export function AdminDashboardPage() {
       <h2 className="text-base font-bold text-slate-700 mb-4">Acciones rápidas</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { to: '/admin/usuarios', label: 'Gestionar usuarios', icon: '??' },
-          { to: '/admin/partidos', label: 'Gestionar partidos', icon: '??' },
-          { to: '/admin/resultados', label: 'Cargar resultados', icon: '?' },
-          { to: '/admin/ranking', label: 'Ver ranking', icon: '??' },
+          { to: '/admin/usuarios', label: 'Gestionar usuarios', icon: '👥' },
+          { to: '/admin/partidos', label: 'Gestionar partidos', icon: '⚽' },
+          { to: '/admin/resultados', label: 'Cargar resultados', icon: '📋' },
+          { to: '/admin/ranking', label: 'Ver ranking', icon: '🏆' },
         ].map(action => (
           <Link
             key={action.to}

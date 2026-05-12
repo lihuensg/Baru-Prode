@@ -100,7 +100,7 @@ export function UserDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
           label="Puntos totales"
           value={stats.totalPoints}
@@ -134,7 +134,7 @@ export function UserDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           to="/app/pronosticos"
-          className="bg-gradient-to-br from-blue-700 to-blue-600 rounded-2xl p-6 text-white card-hover group"
+          className="bg-gradient-to-br from-blue-700 to-blue-600 rounded-2xl p-6 text-white card-hover group min-w-0"
         >
           <Calendar className="w-8 h-8 text-blue-200 mb-3" />
           <h3 className="font-bold text-lg mb-1">Mis pronósticos</h3>
@@ -148,7 +148,7 @@ export function UserDashboardPage() {
 
         <Link
           to="/app/ranking"
-          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm card-hover group"
+          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm card-hover group min-w-0"
         >
           <Trophy className="w-8 h-8 text-amber-400 mb-3" />
           <h3 className="font-bold text-lg text-slate-800 mb-1">Ranking general</h3>
