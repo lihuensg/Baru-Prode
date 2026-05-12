@@ -37,6 +37,29 @@ async function main() {
   });
 
   console.log(`✓ Admin creado/actualizado: ${seedAdmin.ADMIN_USERNAME}`);
+
+  // Ensure a default tournament exists so public settings endpoint works
+  const existingTournament = await prisma.tournament.findFirst();
+  if (!existingTournament) {
+    // Set predictions close at 7 days from now by default
+    const closeAt = new Date();
+    closeAt.setDate(closeAt.getDate() + 7);
+    await prisma.tournament.create({
+      data: {
+        name: 'Prode Mundial 2026',
+        status: 'OPEN',
+        predictionsCloseAt: closeAt,
+      },
+    });
+    console.log('✓ Tournament creado: Prode Mundial 2026');
+  }
+
+  // Ensure an app setting exists
+  const existingAppSetting = await prisma.appSetting.findFirst();
+  if (!existingAppSetting) {
+    await prisma.appSetting.create({ data: { resultsSource: 'MANUAL' } });
+    console.log('✓ AppSetting creado: resultsSource=MANUAL');
+  }
 }
 
 main()
