@@ -29,15 +29,19 @@ export function PromoHero() {
             <ul className="space-y-1.5">
               <li className="flex items-start gap-2">
                 <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
-                <span className="min-w-0">Premio: <strong>60% de lo recaudado</strong>.</span>
+                <span className="min-w-0">El premio será del <strong>60% de lo recaudado.</strong>.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
-                <span className="min-w-0">En caso de empate, el premio se repartirá entre los ganadores.</span>
+                <span className="min-w-0">Los puntos se suman únicamente durante la fase de grupos del Mundial.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
-                <span className="min-w-0">Inscribite y empezá a pronosticar, es divertido y solidario.</span>
+                <span className="min-w-0">El ganador será el participante que más puntos acumule, es decir, quien más resultados acierte.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
+                <span className="min-w-0">En caso de empate en puntos, el premio se repartirá en partes iguales entre los ganadores.</span>
               </li>
             </ul>
           </div>
