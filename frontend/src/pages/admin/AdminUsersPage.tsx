@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Power, X, Check } from 'lucide-react';
+import { Plus, Pencil, Power, X, Check, Eye, EyeOff } from 'lucide-react';
 import { AppLayout } from '../../layouts/AppLayout';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -39,7 +39,7 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof UserFormData, string>>>({});
-
+  const [showPass, setShowPass] = useState(false);
   // populate errors when server returns field-specific errors
   useEffect(() => {
     if (fieldErrors) {
@@ -107,12 +107,21 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
               <label className="block text-xs font-semibold text-slate-600 mb-1">
                 Contraseña {!user && '*'}
               </label>
-              <input
-                {...field('password')}
-                type="password"
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={user ? 'Dejar vacío para no cambiar' : '••••••••'}
-              />
+              <div className="relative">
+                <input
+                  {...field('password')}
+                  type={showPass ? 'text' : 'password'}
+                  className="w-full px-3 py-2 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={user ? 'Dejar vacío para no cambiar' : '••••••••'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
               {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
             </div>
             <div>
