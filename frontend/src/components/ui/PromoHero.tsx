@@ -26,10 +26,19 @@ export function PromoHero() {
           </div>
 
           <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-white/80 max-w-2xl">
-            <ul className="list-disc list-inside space-y-1">
-              <li>Premio: <strong>60% de lo recaudado</strong>.</li>
-              <li>En caso de empate, el premio se repartirá entre los ganadores.</li>
-              <li>Inscribite y empezá a pronosticar — es divertido y solidario.</li>
+            <ul className="space-y-1.5">
+              <li className="flex items-start gap-2">
+                <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
+                <span className="min-w-0">Premio: <strong>60% de lo recaudado</strong>.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
+                <span className="min-w-0">En caso de empate, el premio se repartirá entre los ganadores.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
+                <span className="min-w-0">Inscribite y empezá a pronosticar, es divertido y solidario.</span>
+              </li>
             </ul>
           </div>
         </div>
