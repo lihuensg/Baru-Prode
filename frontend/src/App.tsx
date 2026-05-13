@@ -58,7 +58,14 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/participar" element={<ParticiparPage />} />
-          <Route path="/ranking" element={<RankingPublicPage />} />
+          <Route
+            path="/ranking"
+            element={
+              <ProtectedRoute requiredRole="USER">
+                <RankingPublicPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* ── User (authenticated) ────────────────────── */}
           <Route

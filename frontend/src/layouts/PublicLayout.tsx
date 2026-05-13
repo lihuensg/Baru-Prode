@@ -31,12 +31,14 @@ export function PublicLayout({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="flex items-center justify-between gap-2 w-full sm:w-auto sm:justify-end flex-wrap">
-            <Link
-              to="/ranking"
-              className="text-slate-600 hover:text-blue-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors whitespace-nowrap"
-            >
-              Ranking
-            </Link>
+            {isAuthenticated && (
+              <Link
+                to="/ranking"
+                className="text-slate-600 hover:text-blue-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors whitespace-nowrap"
+              >
+                Ranking
+              </Link>
+            )}
             {isAuthenticated ? (
               <button
                 onClick={handleDashboard}
