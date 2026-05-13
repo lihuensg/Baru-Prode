@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { MessageCircle, LogIn } from 'lucide-react';
 import { PublicLayout } from '../../layouts/PublicLayout';
 
-const whatsappNumber = '543447504626';
-const whatsappMessage = encodeURIComponent('Hola Lihuen, quiero un usuario para participar en el prode. ¿Cuál es tu alias para transferir el monto?');
-const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+const whatsappProofNumber = '3447504626';
+const whatsappProofMessage = encodeURIComponent(
+  'Hola Lihuen, quiero un usuario y contraseña para iniciar el prode. El pago fue transferido, te paso el comprobante.',
+);
+const whatsappProofUrl = `https://wa.me/${whatsappProofNumber}?text=${whatsappProofMessage}`;
 
 function WhatsAppIcon() {
   return (
@@ -39,7 +41,9 @@ export function ParticiparPage() {
                   {
                     step: '02',
                     title: 'Realizá la transferencia',
-                    description: 'El monto de inscripción se indicará al inicio del prode. Una vez realizada la transferencia, enviá el comprobante al administrador.',
+                    description: 'El monto de inscripción es de $10.000.',
+                    transferAlias: 'lihuensg',
+                    extraDescription: 'Una vez realizada la transferencia, enviá el comprobante al administrador.',
                   },
                   {
                     step: '03',
@@ -61,6 +65,25 @@ export function ParticiparPage() {
                       <p className="text-xs font-bold text-blue-400 mb-0.5">PASO {item.step}</p>
                       <p className="font-semibold text-slate-800 text-sm break-words">{item.title}</p>
                       <p className="text-slate-500 text-sm mt-0.5 break-words">{item.description}</p>
+                      {item.transferAlias && (
+                        <p className="text-slate-500 text-sm mt-0.5 break-words">
+                          El alias para realizar la transferencia es: <strong className="text-slate-700">{item.transferAlias}</strong>
+                        </p>
+                      )}
+                      {item.extraDescription && <p className="text-slate-500 text-sm mt-0.5 break-words">{item.extraDescription}</p>}
+                      {item.step === '02' && (
+                        <a
+                          href={whatsappProofUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-3 inline-flex w-auto max-w-full items-center justify-center gap-2 rounded-xl border border-blue-600 bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(30,64,175,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_24px_rgba(30,64,175,0.32)] active:translate-y-0"
+                        >
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#25D366]">
+                            <WhatsAppIcon />
+                          </span>
+                          Enviar comprobante
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -78,19 +101,6 @@ export function ParticiparPage() {
                   </div>
                 </div>
               </div>
-
-              {/* WhatsApp CTA */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group mb-6 flex w-full max-w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] px-4 sm:px-5 py-4 font-bold text-white shadow-[0_12px_30px_rgba(37,211,102,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#22c55e] hover:shadow-[0_16px_36px_rgba(37,211,102,0.36)] active:translate-y-0"
-              >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/20 transition-transform duration-200 group-hover:scale-105">
-                  <WhatsAppIcon />
-                </span>
-                <span className="text-base sm:text-[15px]">Solicitar participación</span>
-              </a>
 
               {/* Actions */}
               <div className="space-y-3">
