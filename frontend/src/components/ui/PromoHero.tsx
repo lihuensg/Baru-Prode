@@ -3,14 +3,14 @@ import { Trophy } from 'lucide-react';
 export function PromoHero() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-      <div className="relative bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
-        <div className="absolute inset-0 opacity-20 bg-[url('/assets/football-pattern.svg')] bg-right-bottom bg-no-repeat" />
+      <div className="relative bg-gradient-to-r from-blue-950 via-blue-800 to-blue-600 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_34%)]" />
 
         <div className="relative p-4 sm:p-8 md:p-10 lg:p-12 text-white">
           <div className="flex flex-col sm:flex-row sm:items-start md:items-center md:justify-between gap-4 sm:gap-6">
             <div className="flex items-start gap-3 sm:gap-4 md:gap-6 min-w-0">
-              <div className="flex-shrink-0 bg-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 shadow-md">
-                <Trophy className="w-8 h-8 sm:w-10 sm:h-10 text-amber-300" />
+              <div className="flex-shrink-0 bg-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 shadow-md border border-white/10">
+                <Trophy className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
 
               <div className="min-w-0">
