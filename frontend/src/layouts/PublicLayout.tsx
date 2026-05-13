@@ -17,8 +17,12 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30 glass border-b border-white/20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center shadow-sm">
-              <span className="text-white font-black text-sm">CB</span>
+            <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-sm overflow-hidden border border-slate-200 p-1">
+              <img
+                src="/assets/logos/favicon.png"
+                alt="Escudo Club Deportivo Barú"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="hidden sm:block">
               <p className="text-slate-900 font-bold text-sm leading-tight">Club Deportivo Barú</p>

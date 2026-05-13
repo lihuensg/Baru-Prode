@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Trophy, Target, TrendingUp, Star, ChevronRight, Clock } from 'lucide-react';
 import { PublicLayout } from '../../layouts/PublicLayout';
+import PromoHero from '../../components/ui/PromoHero';
 import { useProdeStatus } from '../../hooks/useProdeStatus';
 
 export function LandingPage() {
@@ -17,8 +18,7 @@ export function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-28 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-blue-200 text-sm font-medium px-4 py-1.5 rounded-full mb-8 animate-fade-in">
-            <Star className="w-3.5 h-3.5 text-amber-400" />
-            Mundial 2026
+            EEUU - México - Canadá
           </div>
 
           {/* Main title */}
@@ -73,6 +73,8 @@ export function LandingPage() {
           </svg>
         </div>
       </section>
+
+      <PromoHero />
 
       {/* ── HOW TO PLAY ───────────────────────────────────── */}
       <section className="py-20 bg-slate-50">
@@ -152,20 +154,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── PRIZE ────────────────────────────────────────── */}
-      <section className="py-20 hero-gradient relative overflow-hidden">
-        <div className="absolute inset-0 bg-blue-900/50" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-400 rounded-2xl shadow-xl mb-6">
-            <Trophy className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-white font-display mb-3 break-words">Premio del torneo</h2>
-          <p className="text-white/90 text-base sm:text-lg mb-4 font-medium break-words">Demostrá cuánto sabés de fútbol</p>
-          <p className="text-white/80 text-sm sm:text-base max-w-lg mx-auto break-words">
-            El ganador se lleva el reconocimiento del club y un premio especial al cierre del Mundial.
-          </p>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

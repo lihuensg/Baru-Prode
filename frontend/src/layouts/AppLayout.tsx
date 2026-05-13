@@ -52,8 +52,12 @@ export function AppLayout({ children, variant }: AppLayoutProps) {
       {/* Logo */}
       <div className="px-6 py-5 border-b border-blue-700/30">
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-sm">
-            <span className="text-blue-700 font-black text-sm">CB</span>
+          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-sm overflow-hidden border border-blue-200 p-1">
+            <img
+              src="/assets/logos/favicon.png"
+              alt="Escudo Club Deportivo Barú"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-tight">Club Deportivo</p>
@@ -144,8 +148,12 @@ export function AppLayout({ children, variant }: AppLayoutProps) {
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-xs">CB</span>
+            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-blue-200 p-1">
+              <img
+                src="/assets/logos/favicon.png"
+                alt="Escudo Club Deportivo Barú"
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="font-bold text-slate-800 text-sm">Prode Mundial 2026</span>
           </div>

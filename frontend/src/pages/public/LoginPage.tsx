@@ -59,8 +59,12 @@ export function LoginPage() {
           <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden max-w-full">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-5 sm:px-8 py-7 sm:py-8 text-center">
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
-                <span className="text-blue-700 font-black text-lg">CB</span>
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md overflow-hidden p-1.5">
+                <img
+                  src="/assets/logos/favicon.png"
+                  alt="Escudo Club Deportivo Barú"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <h1 className="text-white text-xl sm:text-2xl font-black font-display break-words">Iniciar sesión</h1>
               <p className="text-blue-200 text-sm mt-1">Club Deportivo Barú · Prode 2026</p>
