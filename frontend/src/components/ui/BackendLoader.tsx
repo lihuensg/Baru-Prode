@@ -16,7 +16,7 @@ export function BackendLoader() {
             </svg>
           </div>
           <h3 className="text-white text-lg font-semibold">Preparando el Prode Mundial Club Deportivo Barú...</h3>
-          <p className="text-sm text-slate-100">{message ?? 'Estamos cargando la información del torneo. Esto puede tardar unos segundos.'}</p>
+          <p className="text-sm text-slate-100">{message ?? 'Estamos cargando la información del torneo. Esto puede tardar unos segundos...'}</p>
 
           <div className="mt-3">
             <div className="animate-pulse h-2 w-48 bg-gradient-to-r from-white/30 via-blue-200/20 to-white/30 rounded-full" />

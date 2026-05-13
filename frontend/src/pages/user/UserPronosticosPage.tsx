@@ -106,7 +106,7 @@ export function UserPronosticosPage() {
       {isPageLoading ? (
         <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
           <p className="text-sm font-semibold text-slate-700">Estamos cargando tus pronósticos y la información del torneo...</p>
-          <p className="text-xs text-slate-500 mt-1">Esto puede tardar unos segundos si el backend está iniciando.</p>
+          <p className="text-xs text-slate-500 mt-1">Esto puede tardar unos segundos...</p>
         </div>
       ) : loadError ? (
         <EmptyState
