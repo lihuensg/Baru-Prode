@@ -29,7 +29,7 @@ export function PromoHero() {
             <ul className="space-y-1.5">
               <li className="flex items-start gap-2">
                 <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
-                <span className="min-w-0">El premio será del <strong>60% de lo recaudado.</strong>.</span>
+                <span className="min-w-0">El premio será del <strong>60% de lo recaudado</strong>.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/85" />
