@@ -13,29 +13,50 @@ import type { Match, Prediction, PredictionChoice } from '../../types';
 
 export function UserPronosticosPage() {
   const { user } = useAuth();
-  const { isOpen } = useProdeStatus();
+  const { isOpen, isLoading: isStatusLoading } = useProdeStatus();
   const [matches, setMatches] = useState<Match[]>([]);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<string>('');
 
   useEffect(() => {
+    if (!user) {
+      setIsInitialLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
     void (async () => {
-      const [loadedMatches, loadedPredictions] = await Promise.all([
-        matchesService.getAll(),
-        predictionsService.getByUser(user!.id),
-      ]);
-      setMatches(loadedMatches);
-      setPredictions(loadedPredictions);
+      setIsInitialLoading(true);
+      setLoadError(null);
+
+      try {
+        const [loadedMatches, loadedPredictions] = await Promise.all([
+          matchesService.getAll(),
+          predictionsService.getByUser(user.id),
+        ]);
+
+        if (!isMounted) return;
+        setMatches(loadedMatches);
+        setPredictions(loadedPredictions);
+      } catch (err) {
+        if (!isMounted) return;
+        const parsed = extractError(err);
+        setLoadError(parsed.message || 'No pudimos cargar tus pronósticos en este momento.');
+      } finally {
+        if (isMounted) setIsInitialLoading(false);
+      }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user]);
 
   const groups = useMemo(() => [...new Set(matches.map(match => match.group))].sort(), [matches]);
-  const [activeGroup, setActiveGroup] = useState<string>('A');
-
-  useEffect(() => {
-    if (groups.length > 0 && !groups.includes(activeGroup)) {
-      setActiveGroup(groups[0]);
-    }
-  }, [groups, activeGroup]);
+  const selectedGroup = groups.includes(activeGroup) ? activeGroup : groups[0] ?? '';
 
   const getPrediction = (matchId: string) => predictions.find(prediction => prediction.matchId === matchId);
 
@@ -68,9 +89,10 @@ export function UserPronosticosPage() {
     }
   };
 
-  const groupMatches = matches.filter(match => match.group === activeGroup);
+  const groupMatches = matches.filter(match => match.group === selectedGroup);
   const predicted = predictions.length;
   const total = matches.length;
+  const isPageLoading = isInitialLoading || isStatusLoading;
 
   return (
     <AppLayout variant="user">
@@ -81,43 +103,58 @@ export function UserPronosticosPage() {
         </p>
       </div>
 
-      {!isOpen && <LockBanner />}
-
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-        {groups.map(group => (
-          <button
-            key={group}
-            onClick={() => setActiveGroup(group)}
-            className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-              activeGroup === group
-                ? 'bg-blue-700 text-white shadow-sm'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-            }`}
-          >
-            Grupo {group}
-          </button>
-        ))}
-      </div>
-
-      {groupMatches.length === 0 ? (
+      {isPageLoading ? (
+        <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
+          <p className="text-sm font-semibold text-slate-700">Estamos cargando tus pronósticos y la información del torneo...</p>
+          <p className="text-xs text-slate-500 mt-1">Esto puede tardar unos segundos si el backend está iniciando.</p>
+        </div>
+      ) : loadError ? (
         <EmptyState
-          icon="📋"
-          title="No hay partidos en este grupo"
-          description="Los partidos se cargarán próximamente."
+          icon="⚠️"
+          title="No pudimos cargar tus pronósticos"
+          description={loadError}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {groupMatches.map(match => (
-            <MatchCard
-              key={match.id}
-              match={match}
-              prediction={getPrediction(match.id)}
-              onPredict={handlePredict}
-              disabled={!isOpen || match.status === 'FINISHED'}
-              showResult={match.status === 'FINISHED'}
+        <>
+          {!isOpen && <LockBanner />}
+
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+            {groups.map(group => (
+              <button
+                key={group}
+                onClick={() => setActiveGroup(group)}
+                className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                  selectedGroup === group
+                    ? 'bg-blue-700 text-white shadow-sm'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
+              >
+                Grupo {group}
+              </button>
+            ))}
+          </div>
+
+          {groupMatches.length === 0 ? (
+            <EmptyState
+              icon="📋"
+              title="No hay partidos en este grupo"
+              description="Los partidos se cargarán próximamente."
             />
-          ))}
-        </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {groupMatches.map(match => (
+                <MatchCard
+                  key={match.id}
+                  match={match}
+                  prediction={getPrediction(match.id)}
+                  onPredict={handlePredict}
+                  disabled={!isOpen || match.status === 'FINISHED'}
+                  showResult={match.status === 'FINISHED'}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </AppLayout>
   );

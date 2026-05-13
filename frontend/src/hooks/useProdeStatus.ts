@@ -7,12 +7,21 @@ import { settingsService } from '../services/settingsService';
  */
 export function useProdeStatus() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0 });
 
   useEffect(() => {
     const update = async () => {
-      setIsOpen(await settingsService.isProdeOpen());
-      setCountdown(await settingsService.getCountdown());
+      try {
+        const [open, nextCountdown] = await Promise.all([
+          settingsService.isProdeOpen(),
+          settingsService.getCountdown(),
+        ]);
+        setIsOpen(open);
+        setCountdown(nextCountdown);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     void update();
@@ -20,5 +29,5 @@ export function useProdeStatus() {
     return () => clearInterval(id);
   }, []);
 
-  return { isOpen, countdown };
+  return { isOpen, countdown, isLoading };
 }
