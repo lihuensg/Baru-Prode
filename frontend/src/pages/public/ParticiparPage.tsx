@@ -81,7 +81,7 @@ export function ParticiparPage() {
                           <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#25D366]">
                             <WhatsAppIcon />
                           </span>
-                          Enviar comprobante
+                          Solicitar usuario por WhatsApp
                         </a>
                       )}
                     </div>
