@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Trophy, Target, TrendingUp, Star, ChevronRight, Clock } from 'lucide-react';
 import { PublicLayout } from '../../layouts/PublicLayout';
 import PromoHero from '../../components/ui/PromoHero';
+import { SponsorCarousel } from '../../components/ui/SponsorCarousel';
 import { useProdeStatus } from '../../hooks/useProdeStatus';
 
 export function LandingPage() {
@@ -153,6 +154,9 @@ export function LandingPage() {
           </p>
         </div>
       </section>
+
+      {/* ── SPONSORS ──────────────────────────────────────── */}
+      <SponsorCarousel />
 
     </PublicLayout>
   );
