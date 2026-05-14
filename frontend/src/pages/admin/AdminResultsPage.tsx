@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ClipboardCheck, Zap, Info, ChevronDown } from 'lucide-react';
+import { ClipboardCheck, Zap, Info, Calendar, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { AppLayout } from '../../layouts/AppLayout';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
@@ -17,9 +17,111 @@ const choiceLabel: Record<PredictionChoice, string> = {
   AWAY: 'Ganó visitante',
 };
 
-const getMatchTimestamp = (match: Match) => {
-  const timestamp = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
-  return Number.isNaN(timestamp) ? 0 : timestamp;
+type ResultBucket = 'overdue' | 'today' | 'live' | 'future' | 'finished';
+
+interface MatchTimelineState {
+  bucket: ResultBucket;
+  label: string;
+  description: string;
+  wrapperClass: string;
+  headerClass: string;
+  badgeClass: string;
+  badgeLabel: string;
+  canSelect: boolean;
+}
+
+interface ConfirmModalState {
+  open: boolean;
+  match: Match | null;
+  result: PredictionChoice | null;
+}
+
+const getLocalMatchDateTime = (match: Match) => {
+  const [year, month, day] = match.date.split('-').map(Number);
+  const [hour = '00', minute = '00'] = (match.time || '00:00').split(':');
+
+  if ([year, month, day].some(part => Number.isNaN(part))) {
+    const fallback = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
+    return Number.isNaN(fallback) ? new Date(0) : new Date(fallback);
+  }
+
+  return new Date(year, month - 1, day, Number(hour), Number(minute), 0, 0);
+};
+
+const getMatchTimestamp = (match: Match) => getLocalMatchDateTime(match).getTime();
+
+const isSameLocalDate = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+
+const formatMatchDay = (match: Match) =>
+  getLocalMatchDateTime(match).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+
+const getMatchTimelineState = (match: Match, now: Date): MatchTimelineState => {
+  if (match.status === 'FINISHED') {
+    return {
+      bucket: 'finished',
+      label: 'Finalizado',
+      description: 'Resultado cargado y puntos actualizados.',
+      wrapperClass: 'border-emerald-200 bg-emerald-50/60',
+      headerClass: 'bg-emerald-50 border-emerald-100',
+      badgeClass: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+      badgeLabel: 'Finalizado',
+      canSelect: false,
+    };
+  }
+
+  if (match.status === 'LIVE') {
+    return {
+      bucket: 'live',
+      label: 'En curso',
+      description: 'El partido ya comenzó y todavía puede necesitar resultado.',
+      wrapperClass: 'border-sky-200 bg-sky-50/70',
+      headerClass: 'bg-sky-50 border-sky-100',
+      badgeClass: 'bg-sky-100 text-sky-700 border border-sky-200',
+      badgeLabel: 'En curso',
+      canSelect: true,
+    };
+  }
+
+  const matchDate = getLocalMatchDateTime(match);
+  const matchTime = getMatchTimestamp(match);
+  const today = isSameLocalDate(matchDate, now);
+
+  if (matchTime < now.getTime()) {
+    return {
+      bucket: 'overdue',
+      label: 'Falta cargar resultado',
+      description: 'El partido ya se jugó y el resultado aún no fue cargado.',
+      wrapperClass: 'border-amber-200 bg-amber-50/70',
+      headerClass: 'bg-amber-50 border-amber-100',
+      badgeClass: 'bg-amber-100 text-amber-800 border border-amber-200',
+      badgeLabel: 'Resultado pendiente',
+      canSelect: true,
+    };
+  }
+
+  if (today) {
+    return {
+      bucket: 'today',
+      label: 'Se juega hoy',
+      description: 'Partidos del día que aún no pasaron o que están por comenzar.',
+      wrapperClass: 'border-blue-200 bg-blue-50/70',
+      headerClass: 'bg-blue-50 border-blue-100',
+      badgeClass: 'bg-blue-100 text-blue-700 border border-blue-200',
+      badgeLabel: 'Se juega hoy',
+      canSelect: true,
+    };
+  }
+
+  return {
+    bucket: 'future',
+    label: 'Todavía no se jugó',
+    description: 'Partidos futuros que no deberían cargarse todavía.',
+    wrapperClass: 'border-slate-200 bg-slate-50/70',
+    headerClass: 'bg-slate-50 border-slate-100',
+    badgeClass: 'bg-slate-100 text-slate-600 border border-slate-200',
+    badgeLabel: 'Pendiente',
+    canSelect: false,
+  };
 };
 
 const compareMatchByGroupDateTime = (a: Match, b: Match) => {
@@ -45,23 +147,257 @@ const groupMatchesByGroup = (list: Match[]) => {
   return [...grouped.entries()];
 };
 
+function ResultMatchCard({
+  match,
+  timeline,
+  selectedResult,
+  onSelectResult,
+  onConfirmRequest,
+}: {
+  match: Match;
+  timeline: MatchTimelineState;
+  selectedResult?: PredictionChoice;
+  onSelectResult: (matchId: string, choice: PredictionChoice) => void;
+  onConfirmRequest: (match: Match) => void;
+}) {
+  return (
+    <div className={`rounded-2xl border shadow-sm transition-all ${timeline.wrapperClass}`}>
+      <div className={`px-4 py-4 sm:px-5 sm:py-5 border-b ${timeline.headerClass}`}>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+              Grupo {match.group}
+            </span>
+            <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${timeline.badgeClass}`}>
+              {timeline.badgeLabel}
+            </span>
+            <StatusBadge type="match" value={match.status} />
+          </div>
+
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="font-black text-slate-900 text-sm sm:text-base break-words">
+                {match.homeFlag} {match.homeTeam} <span className="text-slate-400 font-semibold">vs</span> {match.awayTeam} {match.awayFlag}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">{timeline.description}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 py-4 sm:px-5 sm:py-5">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4">
+          <span className="flex items-center gap-1.5">
+            <Calendar className="w-3 h-3" />
+            {formatMatchDay(match)}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Clock className="w-3 h-3" />
+            {match.time}
+          </span>
+        </div>
+
+        {timeline.canSelect ? (
+          <div className="space-y-3">
+            <PredictionSelector
+              homeTeam={match.homeTeam}
+              awayTeam={match.awayTeam}
+              value={selectedResult}
+              onChange={choice => onSelectResult(match.id, choice)}
+              size="sm"
+              disabled={!timeline.canSelect}
+            />
+
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <p className="text-xs text-slate-500">
+                {selectedResult
+                  ? `Resultado seleccionado: ${choiceLabel[selectedResult]}`
+                  : 'Seleccioná un resultado para habilitar la confirmación.'}
+              </p>
+
+              <button
+                type="button"
+                onClick={() => onConfirmRequest(match)}
+                disabled={!selectedResult}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-500 text-white text-sm font-bold transition-colors flex items-center gap-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Confirmar
+              </button>
+            </div>
+          </div>
+        ) : match.status === 'FINISHED' ? (
+          <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-emerald-100 bg-white/80 px-3 py-2">
+            <p className="text-sm text-slate-600">
+              Resultado cargado:
+              <span className="ml-2 font-bold text-emerald-700">{match.result ? choiceLabel[match.result] : 'Sin resultado visible'}</span>
+            </p>
+            <StatusBadge type="match" value="FINISHED" />
+          </div>
+        ) : (
+          <div className="rounded-xl border border-slate-200 bg-white/70 px-3 py-2 flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-slate-600">Todavía no se puede cargar resultado para este partido.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ConfirmResultModal({
+  open,
+  match,
+  result,
+  onCancel,
+  onConfirm,
+  loading,
+}: {
+  open: boolean;
+  match: Match | null;
+  result: PredictionChoice | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+  loading: boolean;
+}) {
+  if (!open || !match || !result) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/55 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-fade-in-up">
+        <div className="px-6 pt-6 flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center">
+            <ClipboardCheck className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-black text-slate-900">¿Confirmás este resultado?</h2>
+            <p className="text-sm text-slate-500">Esta acción actualizará los puntos del ranking.</p>
+          </div>
+        </div>
+
+        <div className="px-6 py-4">
+          <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4 space-y-2">
+            <p className="text-sm font-semibold text-slate-900">
+              {match.homeTeam} vs {match.awayTeam}
+            </p>
+            <p className="text-xs text-slate-500">{formatMatchDay(match)} · {match.time}</p>
+            <p className="text-sm text-slate-700">
+              Resultado seleccionado: <span className="font-bold text-blue-700">{choiceLabel[result]}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-3 px-6 pb-6">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors shadow-sm"
+          >
+            {loading ? 'Confirmando...' : 'Confirmar resultado'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AdminResultsPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [pendingResults, setPendingResults] = useState<Record<string, PredictionChoice>>({});
-  const [expandedScheduledGroups, setExpandedScheduledGroups] = useState<Record<string, boolean>>({});
-  const [expandedFinishedGroups, setExpandedFinishedGroups] = useState<Record<string, boolean>>({});
   const [resultSource] = useState<'MANUAL' | 'API'>('MANUAL');
+  const [confirmModal, setConfirmModal] = useState<ConfirmModalState>({ open: false, match: null, result: null });
+  const [confirming, setConfirming] = useState(false);
+  const [nowTick, setNowTick] = useState(Date.now());
 
-  const scheduledMatches = matches.filter(match => match.status === 'SCHEDULED' || match.status === 'LIVE');
-  const finishedMatches = matches.filter(match => match.status === 'FINISHED');
-  const groupedScheduledMatches = groupMatchesByGroup(scheduledMatches);
-  const groupedFinishedMatches = groupMatchesByGroup(finishedMatches);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNowTick(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const refresh = async () => setMatches(await matchesService.getAll());
 
   useEffect(() => {
     void refresh();
   }, []);
+
+  const resultBuckets = useMemo(() => {
+    const now = new Date(nowTick);
+    const buckets: Record<ResultBucket, Match[]> = {
+      overdue: [],
+      today: [],
+      live: [],
+      future: [],
+      finished: [],
+    };
+
+    matches.forEach(match => {
+      const timeline = getMatchTimelineState(match, now);
+      buckets[timeline.bucket].push(match);
+    });
+
+    return {
+      now,
+      sections: [
+        {
+          key: 'overdue' as const,
+          title: 'Partidos vencidos sin resultado',
+          subtitle: 'Ya se jugaron y todavía falta cargar el resultado.',
+          wrapperClass: 'border-amber-200 bg-amber-50/60',
+          badgeClass: 'bg-amber-100 text-amber-800 border border-amber-200',
+          badgeLabel: 'Falta resultado',
+          matches: buckets.overdue,
+        },
+        {
+          key: 'today' as const,
+          title: 'Partidos de hoy',
+          subtitle: 'Hoy se juegan o se juegan más tarde.',
+          wrapperClass: 'border-blue-200 bg-blue-50/60',
+          badgeClass: 'bg-blue-100 text-blue-700 border border-blue-200',
+          badgeLabel: 'Se juega hoy',
+          matches: buckets.today,
+        },
+        {
+          key: 'live' as const,
+          title: 'Partidos en curso',
+          subtitle: 'Ya comenzaron y todavía pueden necesitar cierre.',
+          wrapperClass: 'border-sky-200 bg-sky-50/60',
+          badgeClass: 'bg-sky-100 text-sky-700 border border-sky-200',
+          badgeLabel: 'En curso',
+          matches: buckets.live,
+        },
+        {
+          key: 'future' as const,
+          title: 'Partidos futuros',
+          subtitle: 'Todavía no se jugaron y no permiten cargar resultado.',
+          wrapperClass: 'border-slate-200 bg-slate-50/60',
+          badgeClass: 'bg-slate-100 text-slate-600 border border-slate-200',
+          badgeLabel: 'Pendiente',
+          matches: buckets.future,
+        },
+        {
+          key: 'finished' as const,
+          title: 'Partidos finalizados',
+          subtitle: 'Ya tienen resultado cargado.',
+          wrapperClass: 'border-emerald-200 bg-emerald-50/60',
+          badgeClass: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+          badgeLabel: 'Finalizado',
+          matches: buckets.finished,
+        },
+      ].filter(section => section.matches.length > 0).map(section => ({
+        ...section,
+        groupedMatches: groupMatchesByGroup(section.matches),
+      })),
+    };
+  }, [matches, nowTick]);
 
   const handleSetResult = async (match: Match, result: PredictionChoice) => {
     try {
@@ -86,13 +422,84 @@ export function AdminResultsPage() {
     setPendingResults(prev => ({ ...prev, [matchId]: choice }));
   };
 
-  const toggleScheduledGroup = (group: string) => {
-    setExpandedScheduledGroups(prev => ({ ...prev, [group]: !prev[group] }));
+  const openConfirmModal = (match: Match) => {
+    const selected = pendingResults[match.id];
+    const timeline = getMatchTimelineState(match, new Date(nowTick));
+
+    if (!timeline.canSelect) {
+      toast.error('No podés cargar resultado de un partido que todavía no se jugó.');
+      return;
+    }
+
+    if (!selected) {
+      toast.error('Seleccioná un resultado antes de confirmar.');
+      return;
+    }
+
+    setConfirmModal({ open: true, match, result: selected });
   };
 
-  const toggleFinishedGroup = (group: string) => {
-    setExpandedFinishedGroups(prev => ({ ...prev, [group]: !prev[group] }));
+  const closeConfirmModal = () => {
+    if (confirming) return;
+    setConfirmModal({ open: false, match: null, result: null });
   };
+
+  const confirmSelectedResult = async () => {
+    if (!confirmModal.match || !confirmModal.result) return;
+
+    setConfirming(true);
+    try {
+      await handleSetResult(confirmModal.match, confirmModal.result);
+      setConfirmModal({ open: false, match: null, result: null });
+    } finally {
+      setConfirming(false);
+    }
+  };
+
+  const renderSection = (section: (typeof resultBuckets.sections)[number]) => (
+    <section key={section.key} className={`rounded-3xl border shadow-sm overflow-hidden ${section.wrapperClass}`}>
+      <div className="px-5 py-4 border-b border-white/70 bg-white/60 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+          <div>
+            <h2 className="text-base font-black text-slate-900">{section.title}</h2>
+            <p className="text-sm text-slate-500 mt-0.5">{section.subtitle}</p>
+          </div>
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${section.badgeClass}`}>
+            {section.badgeLabel}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-4 space-y-5">
+        {section.groupedMatches.map(([group, groupMatches]) => (
+          <div key={group}>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <h3 className="text-sm font-bold text-slate-700">Grupo {group}</h3>
+              <span className="text-xs font-semibold text-slate-500 bg-white px-2.5 py-1 rounded-full border border-slate-200">
+                {groupMatches.length} partido{groupMatches.length === 1 ? '' : 's'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+              {groupMatches.map(match => {
+                const timeline = getMatchTimelineState(match, resultBuckets.now);
+                return (
+                  <ResultMatchCard
+                    key={match.id}
+                    match={match}
+                    timeline={timeline}
+                    selectedResult={pendingResults[match.id]}
+                    onSelectResult={setPending}
+                    onConfirmRequest={openConfirmModal}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 
   return (
     <AppLayout variant="admin">
@@ -129,140 +536,20 @@ export function AdminResultsPage() {
         )}
       </div>
 
-      <h2 className="text-base font-bold text-slate-700 mb-3">
-        Partidos sin resultado ({scheduledMatches.length})
-      </h2>
-
-      {scheduledMatches.length === 0 ? (
-        <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 flex items-center gap-3 mb-6">
-          <ClipboardCheck className="w-5 h-5 text-emerald-600" />
-          <p className="text-sm text-emerald-700 font-medium">¡Todos los partidos tienen resultado cargado!</p>
-        </div>
-      ) : (
-        <div className="space-y-5 mb-8">
-          {groupedScheduledMatches.map(([group, groupMatches]) => (
-            <section key={group}>
-              <button
-                type="button"
-                onClick={() => toggleScheduledGroup(group)}
-                className="w-full mb-2 flex items-center justify-between gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-3 shadow-sm hover:border-slate-200 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-500 transition-transform ${expandedScheduledGroups[group] ? 'rotate-180' : ''}`}
-                  />
-                  <h3 className="text-sm font-bold text-slate-700 text-left">Grupo {group}</h3>
-                </div>
-                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                  {groupMatches.length} partido{groupMatches.length === 1 ? '' : 's'}
-                </span>
-              </button>
-
-              {expandedScheduledGroups[group] && (
-                <div className="space-y-3">
-                  {groupMatches.map(match => (
-                    <div key={match.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                      <div className="flex flex-col gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Grupo {match.group}</span>
-                            <StatusBadge type="match" value={match.status} />
-                          </div>
-                          <p className="font-semibold text-slate-800 text-sm break-words">
-                            {match.homeFlag} {match.homeTeam} <span className="text-slate-400">vs</span> {match.awayTeam} {match.awayFlag}
-                          </p>
-                          <p className="text-xs text-slate-400 mt-0.5">{match.date} · {match.time}</p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-shrink-0 w-full">
-                          <div className="w-full sm:w-56">
-                            <PredictionSelector
-                              homeTeam={match.homeTeam}
-                              awayTeam={match.awayTeam}
-                              value={pendingResults[match.id]}
-                              onChange={choice => setPending(match.id, choice)}
-                              size="sm"
-                            />
-                          </div>
-                          <button
-                            onClick={() => {
-                              if (!pendingResults[match.id]) {
-                                toast.error('Seleccioná una opción para este partido.');
-                                return;
-                              }
-                              void handleSetResult(match, pendingResults[match.id]);
-                            }}
-                            className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors flex-shrink-0"
-                          >
-                            Confirmar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          ))}
-        </div>
-      )}
-
-      <h2 className="text-base font-bold text-slate-700 mb-3">
-        Partidos finalizados ({finishedMatches.length})
-      </h2>
-
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        {finishedMatches.length === 0 ? (
-          <div className="py-10 text-center text-slate-400 text-sm">No hay partidos finalizados todavía.</div>
-        ) : (
-          <div>
-            {groupedFinishedMatches.map(([group, groupMatches], groupIndex) => (
-              <section key={group}>
-                <button
-                  type="button"
-                  onClick={() => toggleFinishedGroup(group)}
-                  className={`w-full px-5 py-3 flex items-center justify-between gap-3 bg-slate-50/80 border-b border-slate-100 ${groupIndex > 0 ? 'border-t border-slate-100' : ''}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <ChevronDown
-                      className={`w-4 h-4 text-slate-500 transition-transform ${expandedFinishedGroups[group] ? 'rotate-180' : ''}`}
-                    />
-                    <h3 className="text-sm font-bold text-slate-700 text-left">Grupo {group}</h3>
-                  </div>
-                  <span className="text-xs font-semibold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
-                    {groupMatches.length} partido{groupMatches.length === 1 ? '' : 's'}
-                  </span>
-                </button>
-
-                {expandedFinishedGroups[group] && (
-                  <div className="divide-y divide-slate-50">
-                    {groupMatches.map(match => (
-                      <div key={match.id} className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Grupo {match.group}</span>
-                            <p className="text-sm font-semibold text-slate-800 break-words">
-                              {match.homeFlag} {match.homeTeam} vs {match.awayTeam} {match.awayFlag}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap flex-shrink-0">
-                          {match.result && (
-                            <span className="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
-                              {choiceLabel[match.result]}
-                            </span>
-                          )}
-                          <StatusBadge type="match" value="FINISHED" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            ))}
-          </div>
-        )}
+      <div className="space-y-6">
+        {resultBuckets.sections.map(renderSection)}
       </div>
+
+      {confirmModal.open && (
+        <ConfirmResultModal
+          open={confirmModal.open}
+          match={confirmModal.match}
+          result={confirmModal.result}
+          loading={confirming}
+          onCancel={closeConfirmModal}
+          onConfirm={() => void confirmSelectedResult()}
+        />
+      )}
     </AppLayout>
   );
 }

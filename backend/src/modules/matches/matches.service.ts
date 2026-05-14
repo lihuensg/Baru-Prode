@@ -199,11 +199,15 @@ export async function deleteAdminMatch(id: string) {
 export async function setMatchResult(id: string, result: PredictionChoice) {
   const match = await prisma.match.findUnique({
     where: { id },
-    select: { id: true, tournamentId: true },
+    select: { id: true, tournamentId: true, matchDate: true },
   });
 
   if (!match) {
     throw new AppError('Partido no encontrado', 404);
+  }
+
+  if (match.matchDate > new Date()) {
+    throw new AppError('No podés cargar resultado de un partido que todavía no se jugó.', 400);
   }
 
   const updated = await prisma.$transaction(async transaction => {
