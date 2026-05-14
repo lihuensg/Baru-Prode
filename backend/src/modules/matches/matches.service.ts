@@ -1,6 +1,7 @@
 import { PredictionChoice, MatchStatus } from '@prisma/client';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/AppError.js';
+import { recalculateRankingSnapshotsWithClient } from '../../utils/ranking.js';
 
 const teamSelect = {
   id: true,
@@ -177,24 +178,22 @@ export async function updateAdminMatch(id: string, data: {
 }
 
 export async function deleteAdminMatch(id: string) {
-  const current = await prisma.match.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      tournamentId: true,
-      _count: { select: { predictions: true } },
-    },
+  await prisma.$transaction(async transaction => {
+    const current = await transaction.match.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        tournamentId: true,
+      },
+    });
+
+    if (!current) {
+      throw new AppError('Partido no encontrado', 404);
+    }
+
+    await transaction.match.delete({ where: { id } });
+    await recalculateRankingSnapshotsWithClient(current.tournamentId, transaction);
   });
-
-  if (!current) {
-    throw new AppError('Partido no encontrado', 404);
-  }
-
-  if (current._count.predictions > 0) {
-    throw new AppError('No se puede eliminar un partido con pronósticos cargados.', 400);
-  }
-
-  await prisma.match.delete({ where: { id } });
 }
 
 export async function setMatchResult(id: string, result: PredictionChoice) {

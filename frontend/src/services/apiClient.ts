@@ -86,6 +86,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   try {
     response = await fetch(`${API_URL}${path}`, {
       ...init,
+      cache: init.cache ?? 'no-store',
       headers,
       signal: controller.signal,
     });
