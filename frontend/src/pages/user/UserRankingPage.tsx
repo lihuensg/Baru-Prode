@@ -91,7 +91,7 @@ export function UserRankingPage() {
       ) : loadError ? (
         <EmptyState icon="⚠️" title="No pudimos cargar el ranking" description={loadError} />
       ) : (
-        <RankingTable entries={entries} highlightUserId={user?.id} />
+        <RankingTable entries={entries} highlightUserId={user?.id} mobileCompact />
       )}
 
       <p className="text-center text-xs text-slate-400 mt-4">

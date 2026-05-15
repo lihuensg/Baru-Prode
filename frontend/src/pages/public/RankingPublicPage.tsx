@@ -62,7 +62,7 @@ export function RankingPublicPage() {
         )}
 
         {/* Full table */}
-        <RankingTable entries={entries} highlightUserId={user?.id} />
+        <RankingTable entries={entries} highlightUserId={user?.id} mobileCompact />
 
         <p className="text-center text-xs text-slate-400 mt-6">
           Actualizado en tiempo real · 3 pts por acierto
