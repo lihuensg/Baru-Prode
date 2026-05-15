@@ -124,16 +124,23 @@ export function RankingTable({ entries, highlightUserId }: RankingTableProps) {
                   {entry.fullName.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className={clsx('font-semibold text-sm break-words', isHighlighted ? 'text-blue-800' : 'text-slate-800')}>
-                    {entry.fullName}
-                    {isHighlighted && <span className="ml-2 text-xs text-blue-500 font-normal">(vos)</span>}
-                  </p>
-                  <p className="text-xs text-slate-400 break-words">@{entry.username}</p>
-
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <span className={clsx('inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-bold', isTop3 ? 'bg-blue-700 text-white shadow-sm' : 'bg-slate-100 text-slate-700')}>
+                  <div className="flex items-start gap-2 min-w-0">
+                    <div className="min-w-0 flex-1">
+                      <p className={clsx('font-semibold text-sm truncate', isHighlighted ? 'text-blue-800' : 'text-slate-800')}>
+                        {entry.fullName}
+                        {isHighlighted && <span className="ml-2 text-xs text-blue-500 font-normal">(vos)</span>}
+                      </p>
+                      <p className="text-xs text-slate-400 truncate">@{entry.username}</p>
+                    </div>
+                    <span className={clsx(
+                      'inline-flex shrink-0 items-center justify-center px-3 py-1 rounded-full text-sm font-bold whitespace-nowrap',
+                      isTop3 ? 'bg-blue-700 text-white shadow-sm' : 'bg-slate-100 text-slate-700'
+                    )}>
                       {entry.totalPoints} pts
                     </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
                       {entry.totalCorrect} aciertos
                     </span>
