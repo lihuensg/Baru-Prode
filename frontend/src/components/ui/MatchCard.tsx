@@ -20,6 +20,12 @@ const choiceLabel: Record<PredictionChoice, string> = {
   AWAY: 'Gana visitante',
 };
 
+const resultLabel: Record<PredictionChoice, string> = {
+  HOME: 'Ganó local',
+  DRAW: 'Empató',
+  AWAY: 'Ganó visitante',
+};
+
 export function MatchCard({
   match,
   prediction,
@@ -66,7 +72,7 @@ export function MatchCard({
               'mt-1 text-xs font-semibold px-2 py-0.5 rounded',
               'bg-blue-700 text-white'
             )}>
-              {choiceLabel[match.result!]}
+              {resultLabel[match.result!]}
             </span>
           )}
         </div>

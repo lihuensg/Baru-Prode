@@ -25,9 +25,9 @@ export function PredictionSelector({
   size = 'md',
 }: PredictionSelectorProps) {
   const options: Array<{ choice: PredictionChoice; label: string; shortLabel: string }> = [
-    { choice: 'HOME', label: `Gana ${homeTeam}`, shortLabel: homeTeam.split(' ')[0] },
+    { choice: 'HOME', label: 'Gana local', shortLabel: 'Gana local' },
     { choice: 'DRAW', label: 'Empate', shortLabel: 'Empate' },
-    { choice: 'AWAY', label: `Gana ${awayTeam}`, shortLabel: awayTeam.split(' ')[0] },
+    { choice: 'AWAY', label: 'Gana visitante', shortLabel: 'Gana visitante' },
   ];
 
   return (
