@@ -111,11 +111,11 @@ export function RankingTable({ entries, highlightUserId }: RankingTableProps) {
             <div
               key={entry.userId}
               className={clsx(
-                'p-4',
+                'w-full max-w-full overflow-hidden p-4',
                 isHighlighted ? 'bg-blue-50' : idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
               )}
             >
-              <div className="flex items-start gap-3 min-w-0">
+              <div className="flex items-start gap-3 min-w-0 w-full max-w-full">
                 <RankMedal position={entry.position} />
                 <div className={clsx(
                   'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0',
@@ -123,17 +123,19 @@ export function RankingTable({ entries, highlightUserId }: RankingTableProps) {
                 )}>
                   {entry.fullName.charAt(0).toUpperCase()}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start gap-2 min-w-0">
+                <div className="min-w-0 flex-1 max-w-full">
+                  <div className="flex items-start gap-2 min-w-0 w-full max-w-full">
                     <div className="min-w-0 flex-1">
-                      <p className={clsx('font-semibold text-sm truncate', isHighlighted ? 'text-blue-800' : 'text-slate-800')}>
-                        {entry.fullName}
-                        {isHighlighted && <span className="ml-2 text-xs text-blue-500 font-normal">(vos)</span>}
-                      </p>
+                      <div className="flex items-center gap-1 min-w-0">
+                        <p className={clsx('font-semibold text-sm truncate min-w-0', isHighlighted ? 'text-blue-800' : 'text-slate-800')}>
+                          {entry.fullName}
+                        </p>
+                        {isHighlighted && <span className="shrink-0 text-xs text-blue-500 font-normal">(vos)</span>}
+                      </div>
                       <p className="text-xs text-slate-400 truncate">@{entry.username}</p>
                     </div>
                     <span className={clsx(
-                      'inline-flex shrink-0 items-center justify-center px-3 py-1 rounded-full text-sm font-bold whitespace-nowrap',
+                      'inline-flex shrink-0 items-center justify-center px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap',
                       isTop3 ? 'bg-blue-700 text-white shadow-sm' : 'bg-slate-100 text-slate-700'
                     )}>
                       {entry.totalPoints} pts
