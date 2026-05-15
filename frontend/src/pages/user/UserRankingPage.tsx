@@ -6,21 +6,45 @@ import { predictionsService } from '../../services/predictionsService';
 import { Trophy, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { RankingEntry } from '../../types';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 export function UserRankingPage() {
   const { user } = useAuth();
   const [entries, setEntries] = useState<RankingEntry[]>([]);
   const [stats, setStats] = useState({ totalPredicted: 0, totalCorrect: 0, totalPoints: 0, pending: 0 });
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!user) {
+      setIsInitialLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
     void (async () => {
-      const [ranking, userStats] = await Promise.all([
-        rankingService.getAll(),
-        predictionsService.getUserStats(user!.id),
-      ]);
-      setEntries(ranking);
-      setStats(userStats);
+      setIsInitialLoading(true);
+      setLoadError(null);
+      try {
+        const [ranking, userStats] = await Promise.all([
+          rankingService.getAll(),
+          predictionsService.getUserStats(user!.id),
+        ]);
+        if (!isMounted) return;
+        setEntries(ranking);
+        setStats(userStats);
+      } catch (err: unknown) {
+        if (!isMounted) return;
+        setLoadError('No pudimos cargar el ranking en este momento.');
+      } finally {
+        if (isMounted) setIsInitialLoading(false);
+      }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user]);
 
   const myRank = entries.find(e => e.userId === user!.id);
@@ -59,7 +83,16 @@ export function UserRankingPage() {
         </div>
       )}
 
-      <RankingTable entries={entries} highlightUserId={user?.id} />
+      {isInitialLoading ? (
+        <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
+          <p className="text-sm font-semibold text-slate-700">Estamos cargando el ranking y la información del torneo...</p>
+          <p className="text-xs text-slate-500 mt-1">Esto puede tardar unos segundos...</p>
+        </div>
+      ) : loadError ? (
+        <EmptyState icon="⚠️" title="No pudimos cargar el ranking" description={loadError} />
+      ) : (
+        <RankingTable entries={entries} highlightUserId={user?.id} />
+      )}
 
       <p className="text-center text-xs text-slate-400 mt-4">
         3 puntos por acierto · Los empates en puntos se desempatan por cantidad de aciertos
