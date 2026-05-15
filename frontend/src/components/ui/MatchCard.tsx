@@ -121,8 +121,6 @@ export function MatchCard({
             value={prediction?.choice}
             onChange={(choice) => onPredict(match.id, choice)}
             disabled={disabled}
-            homeTeam={match.homeTeam}
-            awayTeam={match.awayTeam}
             size={compact ? 'sm' : 'md'}
           />
         </div>

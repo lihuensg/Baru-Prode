@@ -5,8 +5,6 @@ interface PredictionSelectorProps {
   value?: PredictionChoice;
   onChange?: (choice: PredictionChoice) => void;
   disabled?: boolean;
-  homeTeam: string;
-  awayTeam: string;
   size?: 'sm' | 'md';
 }
 
@@ -20,8 +18,6 @@ export function PredictionSelector({
   value,
   onChange,
   disabled = false,
-  homeTeam,
-  awayTeam,
   size = 'md',
 }: PredictionSelectorProps) {
   const options: Array<{ choice: PredictionChoice; label: string; shortLabel: string }> = [

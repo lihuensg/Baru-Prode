@@ -200,8 +200,6 @@ function ResultMatchCard({
         {timeline.canSelect ? (
           <div className="space-y-3">
             <PredictionSelector
-              homeTeam={match.homeTeam}
-              awayTeam={match.awayTeam}
               value={selectedResult}
               onChange={choice => onSelectResult(match.id, choice)}
               size="sm"
