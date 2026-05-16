@@ -5,6 +5,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { matchesService } from '../../services/matchesService';
 import { showErrorToast, showSuccessToast } from '../../utils/errorHandler';
+import { formatTournamentDateLabel } from '../../utils/timezone';
 import type { Match, MatchStatus } from '../../types';
 
 // ─── Match Form Modal ─────────────────────────────────────────────────────────
@@ -164,7 +165,7 @@ function DeleteMatchModal({ match, loading = false, onClose, onConfirm }: Delete
           </p>
           <div className="mt-4 rounded-2xl bg-slate-50 border border-slate-100 p-4">
             <p className="text-sm font-semibold text-slate-900">{match.homeTeam} vs {match.awayTeam}</p>
-            <p className="text-xs text-slate-500 mt-1">Grupo {match.group} · {match.date} {match.time}</p>
+            <p className="text-xs text-slate-500 mt-1">Grupo {match.group} · {formatTournamentDateLabel(`${match.date}T12:00:00-03:00`)} {match.time}</p>
           </div>
         </div>
 
@@ -306,7 +307,7 @@ export function AdminMatchesPage() {
                   </td>
                   <td className="px-4 py-3.5 hidden md:table-cell">
                     <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{match.date}</span>
+                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatTournamentDateLabel(`${match.date}T12:00:00-03:00`)}</span>
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{match.time}</span>
                     </div>
                   </td>
@@ -356,7 +357,7 @@ export function AdminMatchesPage() {
                   </div>
 
                   <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
-                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{match.date}</span>
+                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatTournamentDateLabel(`${match.date}T12:00:00-03:00`)}</span>
                     <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{match.time}</span>
                   </div>
                 </div>

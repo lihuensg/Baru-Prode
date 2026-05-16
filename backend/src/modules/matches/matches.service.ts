@@ -2,6 +2,7 @@ import { PredictionChoice, MatchStatus } from '@prisma/client';
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/AppError.js';
 import { recalculateRankingSnapshotsWithClient } from '../../utils/ranking.js';
+import { parseArgentinaDateTime } from '../../utils/timezone.js';
 
 const teamSelect = {
   id: true,
@@ -102,7 +103,7 @@ export async function createAdminMatch(data: {
       groupName: data.groupName,
       homeTeamId: homeTeam.id,
       awayTeamId: awayTeam.id,
-      matchDate: new Date(data.matchDate),
+      matchDate: parseArgentinaDateTime(data.matchDate),
       venue: data.venue ?? null,
       status: data.status ?? 'SCHEDULED',
     },
@@ -155,7 +156,7 @@ export async function updateAdminMatch(id: string, data: {
     data: {
       ...(data.tournamentId ? { tournamentId: data.tournamentId } : {}),
       ...(data.groupName ? { groupName: data.groupName } : {}),
-      ...(data.matchDate ? { matchDate: new Date(data.matchDate) } : {}),
+      ...(data.matchDate ? { matchDate: parseArgentinaDateTime(data.matchDate) } : {}),
       ...(data.status ? { status: data.status } : {}),
       ...(data.venue !== undefined ? { venue: data.venue } : {}),
       homeTeamId: homeTeam.id,

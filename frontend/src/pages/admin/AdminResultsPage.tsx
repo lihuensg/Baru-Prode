@@ -9,6 +9,7 @@ import { matchesService } from '../../services/matchesService';
 import { predictionsService } from '../../services/predictionsService';
 import { rankingService } from '../../services/rankingService';
 import { showErrorToast, showSuccessToast } from '../../utils/errorHandler';
+import { formatTournamentDateLabel, parseTournamentDateTime } from '../../utils/timezone';
 import type { Match, PredictionChoice } from '../../types';
 
 const choiceLabel: Record<PredictionChoice, string> = {
@@ -37,15 +38,7 @@ interface ConfirmModalState {
 }
 
 const getLocalMatchDateTime = (match: Match) => {
-  const [year, month, day] = match.date.split('-').map(Number);
-  const [hour = '00', minute = '00'] = (match.time || '00:00').split(':');
-
-  if ([year, month, day].some(part => Number.isNaN(part))) {
-    const fallback = Date.parse(`${match.date}T${match.time || '00:00'}:00`);
-    return Number.isNaN(fallback) ? new Date(0) : new Date(fallback);
-  }
-
-  return new Date(year, month - 1, day, Number(hour), Number(minute), 0, 0);
+  return parseTournamentDateTime(match.date, match.time || '00:00');
 };
 
 const getMatchTimestamp = (match: Match) => getLocalMatchDateTime(match).getTime();
@@ -53,7 +46,7 @@ const getMatchTimestamp = (match: Match) => getLocalMatchDateTime(match).getTime
 const isSameLocalDate = (a: Date, b: Date) => a.toDateString() === b.toDateString();
 
 const formatMatchDay = (match: Match) =>
-  getLocalMatchDateTime(match).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+  formatTournamentDateLabel(`${match.date}T12:00:00-03:00`);
 
 const getMatchTimelineState = (match: Match, now: Date): MatchTimelineState => {
   if (match.status === 'FINISHED') {

@@ -1,5 +1,6 @@
 import { prisma } from '../../config/prisma.js';
 import { AppError } from '../../utils/AppError.js';
+import { parseArgentinaDateTime } from '../../utils/timezone.js';
 
 const CLUB_NAME = 'Club Deportivo Barú';
 
@@ -50,7 +51,7 @@ export async function updateAdminSettings(data: {
       await transaction.tournament.update({
         where: { id: tournament.id },
         data: {
-          ...(data.predictionsCloseAt ? { predictionsCloseAt: new Date(data.predictionsCloseAt) } : {}),
+          ...(data.predictionsCloseAt ? { predictionsCloseAt: parseArgentinaDateTime(data.predictionsCloseAt) } : {}),
           ...(data.status ? { status: data.status } : {}),
         },
       });

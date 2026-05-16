@@ -3,6 +3,7 @@ import { apiFetch, USE_MOCKS } from './apiClient';
 import { authService } from './authService';
 import { mapMatch } from './mappers';
 import { mockMatches } from '../mocks/data';
+import { buildTournamentDateTimeIso } from '../utils/timezone';
 
 const STORAGE_KEY = 'baru_matches';
 let cachedTournamentId: string | null = null;
@@ -38,7 +39,7 @@ function buildMatchPayload(data: Omit<Match, 'id'>) {
       shortName: data.awayTeam.slice(0, 3).toUpperCase(),
       flagUrl: data.awayFlag,
     },
-    matchDate: new Date(`${data.date}T${data.time}:00-03:00`).toISOString(),
+    matchDate: buildTournamentDateTimeIso(data.date, data.time),
     status: data.status,
     venue: data.venue ?? null,
   };
@@ -141,7 +142,7 @@ export const matchesService = {
           shortName: (data.awayTeam ?? current.awayTeam).slice(0, 3).toUpperCase(),
           flagUrl: data.awayFlag ?? current.awayFlag,
         },
-        matchDate: new Date(`${data.date ?? current.date}T${data.time ?? current.time}:00-03:00`).toISOString(),
+        matchDate: buildTournamentDateTimeIso(data.date ?? current.date, data.time ?? current.time),
         status: data.status ?? current.status,
         venue: data.venue ?? current.venue ?? null,
       }),

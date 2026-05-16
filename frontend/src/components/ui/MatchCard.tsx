@@ -4,6 +4,7 @@ import type { Match, Prediction } from '../../types';
 import { StatusBadge } from './StatusBadge';
 import { PredictionSelector } from './PredictionSelector';
 import type { PredictionChoice } from '../../types';
+import { formatTournamentDateLabel } from '../../utils/timezone';
 
 interface MatchCardProps {
   match: Match;
@@ -36,10 +37,6 @@ export function MatchCard({
 }: MatchCardProps) {
   const hasResult = match.status === 'FINISHED' && match.result;
   const predictionCorrect = prediction?.isCorrect;
-  const [year, month, day] = match.date.split('-').map(Number);
-  const displayDate = Number.isFinite(year) && Number.isFinite(month) && Number.isFinite(day)
-    ? new Date(year, month - 1, day)
-    : new Date(match.date);
 
   return (
     <div className={clsx(
@@ -87,7 +84,7 @@ export function MatchCard({
       <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-slate-400">
         <span className="flex items-center gap-1">
           <Calendar className="w-3 h-3" />
-          {displayDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}
+          {formatTournamentDateLabel(`${match.date}T12:00:00-03:00`)}
         </span>
         <span className="flex items-center gap-1">
           <Clock className="w-3 h-3" />

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { getAdminDashboard } from '../../services/adminService';
 import { settingsService } from '../../services/settingsService';
 import { showErrorToast, showSuccessToast } from '../../utils/errorHandler';
+import { buildTournamentDateTimeIso, formatTournamentDateTimeInput } from '../../utils/timezone';
 
 type DashboardData = Awaited<ReturnType<typeof getAdminDashboard>>;
 
@@ -46,13 +47,12 @@ function getCountdown(closeAt: string) {
 }
 
 function toDatetimeLocal(value: string) {
-  const date = new Date(value);
-  const offset = date.getTimezoneOffset();
-  return new Date(date.getTime() - offset * 60_000).toISOString().slice(0, 16);
+  return formatTournamentDateTimeInput(value);
 }
 
 function fromDatetimeLocal(value: string) {
-  return new Date(value).toISOString();
+  const [date, time] = value.split('T');
+  return buildTournamentDateTimeIso(date, time);
 }
 
 export function AdminDashboardPage() {

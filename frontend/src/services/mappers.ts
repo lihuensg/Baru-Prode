@@ -1,4 +1,5 @@
 ﻿import type { AuthUser, Match, Prediction, RankingEntry, AppSettings, User } from '../types';
+import { formatTournamentDateKey, formatTournamentTime } from '../utils/timezone';
 
 export function mapAuthUser(apiUser: any): AuthUser {
   return {
@@ -24,10 +25,9 @@ export function mapUser(apiUser: any): User {
 }
 
 function formatDateParts(value: string | Date) {
-  const date = new Date(value);
   return {
-    date: date.toISOString().slice(0, 10),
-    time: date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+    date: formatTournamentDateKey(value),
+    time: formatTournamentTime(value),
   };
 }
 
