@@ -88,7 +88,7 @@ function MatchModal({ match, onClose, onSave }: MatchModalProps) {
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1">Grupo *</label>
               <select {...field('group')} className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                {['A','B','C','D','E','F','G','H'].map(g => <option key={g}>{g}</option>)}
+                {['A','B','C','D','E','F','G','H','I','J','K','L'].map(g => <option key={g}>{g}</option>)}
               </select>
             </div>
             <div>
