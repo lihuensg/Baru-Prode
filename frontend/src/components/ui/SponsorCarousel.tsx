@@ -84,7 +84,8 @@ export function SponsorCarousel() {
                       src={sponsor.path}
                       alt={`${sponsor.name} sponsor`}
                       className="max-h-full max-w-full object-contain object-center"
-                      loading="lazy"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
