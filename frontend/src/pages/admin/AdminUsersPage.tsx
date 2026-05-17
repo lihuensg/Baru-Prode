@@ -85,14 +85,14 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-600 mb-1">Nombre completo *</label>
               <input
                 {...field('fullName')}
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Juan Pérez"
               />
-                      {errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
+              {errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1">Usuario *</label>
@@ -143,7 +143,7 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
               />
               {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
             </div>
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-600 mb-1">Estado de pago</label>
               <select
                 {...field('paymentStatus')}
@@ -154,7 +154,7 @@ function UserModal({ user, onClose, onSave, fieldErrors }: UserModalProps) {
               </select>
             </div>
           </div>
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <button
               type="button"
               onClick={onClose}
