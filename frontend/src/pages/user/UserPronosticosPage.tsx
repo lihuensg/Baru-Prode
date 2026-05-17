@@ -118,20 +118,27 @@ export function UserPronosticosPage() {
         <>
           {!isOpen && <LockBanner />}
 
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-            {groups.map(group => (
-              <button
-                key={group}
-                onClick={() => setActiveGroup(group)}
-                className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                  selectedGroup === group
-                    ? 'bg-blue-700 text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-                }`}
-              >
-                Grupo {group}
-              </button>
-            ))}
+          <div className="relative mb-6">
+            <div
+              className="flex w-full max-w-full flex-nowrap gap-2 overflow-x-auto overflow-y-hidden pb-2 pr-8 whitespace-nowrap overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
+            >
+              {groups.map(group => (
+                <button
+                  key={group}
+                  onClick={() => setActiveGroup(group)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                    selectedGroup === group
+                      ? 'bg-blue-700 text-white shadow-sm'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
+                  }`}
+                >
+                  Grupo {group}
+                </button>
+              ))}
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-slate-50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-slate-50 to-transparent" />
           </div>
 
           {groupMatches.length === 0 ? (

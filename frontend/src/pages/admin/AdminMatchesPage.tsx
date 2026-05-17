@@ -271,22 +271,29 @@ export function AdminMatchesPage() {
       />
 
       {/* Group filter */}
-      <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
-        <button
-          onClick={() => setFilterGroup('all')}
-          className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${filterGroup === 'all' ? 'bg-blue-700 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-300'}`}
+      <div className="relative mb-5">
+        <div
+          className="flex w-full max-w-full flex-nowrap gap-2 overflow-x-auto overflow-y-hidden pb-2 pr-8 whitespace-nowrap overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
         >
-          Todos
-        </button>
-        {groups.map(g => (
           <button
-            key={g}
-            onClick={() => setFilterGroup(g)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${filterGroup === g ? 'bg-blue-700 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-300'}`}
+            onClick={() => setFilterGroup('all')}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${filterGroup === 'all' ? 'bg-blue-700 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-300'}`}
           >
-            Grupo {g}
+            Todos
           </button>
-        ))}
+          {groups.map(g => (
+            <button
+              key={g}
+              onClick={() => setFilterGroup(g)}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${filterGroup === g ? 'bg-blue-700 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-300'}`}
+            >
+              Grupo {g}
+            </button>
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-slate-50 to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-slate-50 to-transparent" />
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
