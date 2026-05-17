@@ -5,6 +5,7 @@ import { StatusBadge } from './StatusBadge';
 import { PredictionSelector } from './PredictionSelector';
 import type { PredictionChoice } from '../../types';
 import { formatTournamentDateLabel } from '../../utils/timezone';
+import { FlagIcon } from './FlagIcon';
 
 interface MatchCardProps {
   match: Match;
@@ -58,7 +59,7 @@ export function MatchCard({
       {/* Teams */}
       <div className="flex items-center justify-between gap-2 mb-3 min-w-0">
         <div className="flex-1 min-w-0 text-center">
-          <div className="text-2xl mb-0.5">{match.homeFlag}</div>
+          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="lg" /></div>
           <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.homeTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Local</p>
         </div>
@@ -74,7 +75,7 @@ export function MatchCard({
           )}
         </div>
         <div className="flex-1 min-w-0 text-center">
-          <div className="text-2xl mb-0.5">{match.awayFlag}</div>
+          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="lg" /></div>
           <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.awayTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Visitante</p>
         </div>

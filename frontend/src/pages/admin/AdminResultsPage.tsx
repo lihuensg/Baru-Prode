@@ -11,6 +11,7 @@ import { rankingService } from '../../services/rankingService';
 import { showErrorToast, showSuccessToast } from '../../utils/errorHandler';
 import { formatTournamentDateLabel, parseTournamentDateTime } from '../../utils/timezone';
 import type { Match, PredictionChoice } from '../../types';
+import { FlagIcon } from '../../components/ui/FlagIcon';
 
 const choiceLabel: Record<PredictionChoice, string> = {
   HOME: 'Ganó local',
@@ -170,7 +171,9 @@ function ResultMatchCard({
           <div className="flex items-start justify-between gap-3">
             <div>
               <h3 className="font-black text-slate-900 text-sm sm:text-base break-words">
-                {match.homeFlag} {match.homeTeam} <span className="text-slate-400 font-semibold">vs</span> {match.awayTeam} {match.awayFlag}
+                <span className="inline-flex align-middle mr-1"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" /></span>
+                {match.homeTeam} <span className="text-slate-400 font-semibold">vs</span> {match.awayTeam}
+                <span className="inline-flex align-middle ml-1"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" /></span>
               </h3>
               <p className="text-xs text-slate-500 mt-1">{timeline.description}</p>
             </div>

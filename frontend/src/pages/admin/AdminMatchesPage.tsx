@@ -3,6 +3,7 @@ import { Plus, Pencil, X, Check, Calendar, Clock, Trash2, AlertTriangle } from '
 import { AppLayout } from '../../layouts/AppLayout';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { FlagIcon } from '../../components/ui/FlagIcon';
 import { matchesService } from '../../services/matchesService';
 import { showErrorToast, showSuccessToast } from '../../utils/errorHandler';
 import { formatTournamentDateLabel } from '../../utils/timezone';
@@ -69,7 +70,11 @@ function MatchModal({ match, onClose, onSave }: MatchModalProps) {
   const field = (key: keyof MatchFormData) => ({
     value: form[key] as string,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setForm(prev => ({ ...prev, [key]: e.target.value }));
+      const nextValue = e.target.value;
+      setForm(prev => ({
+        ...prev,
+        [key]: nextValue,
+      }));
       setErrors(prev => ({ ...prev, [key]: undefined }));
     },
   });
@@ -100,19 +105,25 @@ function MatchModal({ match, onClose, onSave }: MatchModalProps) {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Equipo local * (flag emoji)</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Equipo local *</label>
               <div className="flex gap-2">
-                <input {...field('homeFlag')} className="w-16 px-2 py-2 rounded-xl border border-slate-200 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div className="w-16 px-2 py-2 rounded-xl border border-slate-200 text-sm text-center bg-slate-50 flex items-center justify-center">
+                  <FlagIcon teamName={form.homeTeam} fallback={form.homeFlag} size="sm" />
+                </div>
                 <input {...field('homeTeam')} placeholder="Argentina" className="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
+              <p className="mt-1 text-[11px] text-slate-400">La bandera se carga automáticamente según el equipo.</p>
               {errors.homeTeam && <p className="mt-1 text-xs text-red-500">{errors.homeTeam}</p>}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Equipo visitante * (flag emoji)</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Equipo visitante *</label>
               <div className="flex gap-2">
-                <input {...field('awayFlag')} className="w-16 px-2 py-2 rounded-xl border border-slate-200 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div className="w-16 px-2 py-2 rounded-xl border border-slate-200 text-sm text-center bg-slate-50 flex items-center justify-center">
+                  <FlagIcon teamName={form.awayTeam} fallback={form.awayFlag} size="sm" />
+                </div>
                 <input {...field('awayTeam')} placeholder="Brasil" className="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
+              <p className="mt-1 text-[11px] text-slate-400">La bandera se carga automáticamente según el equipo.</p>
               {errors.awayTeam && <p className="mt-1 text-xs text-red-500">{errors.awayTeam}</p>}
             </div>
             <div>
@@ -295,11 +306,11 @@ export function AdminMatchesPage() {
                 <tr key={match.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2 text-sm">
-                      <span>{match.homeFlag}</span>
+                      <FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" />
                       <span className="font-semibold text-slate-800">{match.homeTeam}</span>
                       <span className="text-slate-400 text-xs font-bold">vs</span>
                       <span className="font-semibold text-slate-800">{match.awayTeam}</span>
-                      <span>{match.awayFlag}</span>
+                      <FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" />
                     </div>
                   </td>
                   <td className="px-4 py-3.5 text-center hidden sm:table-cell">
@@ -344,11 +355,11 @@ export function AdminMatchesPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 min-w-0">
-                    <span className="shrink-0">{match.homeFlag}</span>
+                    <span className="shrink-0"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" /></span>
                     <span className="truncate">{match.homeTeam}</span>
                     <span className="text-slate-400 text-xs font-bold shrink-0">vs</span>
                     <span className="truncate">{match.awayTeam}</span>
-                    <span className="shrink-0">{match.awayFlag}</span>
+                    <span className="shrink-0"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" /></span>
                   </div>
 
                   <div className="mt-2 flex flex-wrap items-center gap-2">
