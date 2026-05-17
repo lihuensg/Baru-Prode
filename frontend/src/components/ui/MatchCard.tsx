@@ -41,7 +41,7 @@ export function MatchCard({
 
   return (
     <div className={clsx(
-      'bg-white rounded-xl border shadow-sm transition-all',
+      'w-full max-w-full min-w-0 mx-auto bg-white rounded-xl border shadow-sm transition-all',
       predictionCorrect === true && 'border-l-4 border-l-emerald-400 border-slate-100',
       predictionCorrect === false && 'border-l-4 border-l-red-300 border-slate-100',
       predictionCorrect === undefined && 'border-slate-100',
@@ -59,11 +59,11 @@ export function MatchCard({
       {/* Teams */}
       <div className="flex items-center justify-between gap-2 mb-3 min-w-0">
         <div className="flex-1 min-w-0 text-center">
-          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="lg" /></div>
-          <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.homeTeam}</p>
+          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" className="sm:w-6 sm:h-5 shrink-0" /></div>
+          <p className="text-[11px] sm:text-sm font-semibold text-slate-800 leading-tight break-words px-1">{match.homeTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Local</p>
         </div>
-        <div className="flex flex-col items-center px-2">
+        <div className="flex flex-col items-center px-2 sm:shrink-0">
           <span className="text-xs font-bold text-slate-400 tracking-widest">VS</span>
           {hasResult && showResult && (
             <span className={clsx(
@@ -75,14 +75,14 @@ export function MatchCard({
           )}
         </div>
         <div className="flex-1 min-w-0 text-center">
-          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="lg" /></div>
-          <p className="text-sm font-semibold text-slate-800 leading-tight break-words">{match.awayTeam}</p>
+          <div className="mb-0.5 flex justify-center"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" className="sm:w-6 sm:h-5 shrink-0" /></div>
+          <p className="text-[11px] sm:text-sm font-semibold text-slate-800 leading-tight break-words px-1">{match.awayTeam}</p>
           <p className="text-xs text-slate-400 mt-0.5">Visitante</p>
         </div>
       </div>
 
       {/* Date / time / venue */}
-      <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-slate-400">
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-3 text-xs text-slate-400">
         <span className="flex items-center gap-1">
           <Calendar className="w-3 h-3" />
           {formatTournamentDateLabel(`${match.date}T12:00:00-03:00`)}
@@ -103,7 +103,7 @@ export function MatchCard({
       {onPredict && (
         <div className="mt-3 pt-3 border-t border-slate-100">
           {disabled && prediction?.choice && (
-            <p className="text-xs text-slate-400 mb-2">
+            <p className="text-xs text-slate-400 mb-2 text-center sm:text-left">
               Tu pronóstico: <span className="font-semibold text-slate-600">{choiceLabel[prediction.choice]}</span>
               {prediction.points !== undefined && (
                 <span className={clsx(

@@ -137,7 +137,7 @@ export function AppLayout({ children, variant }: AppLayoutProps) {
       )}
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen min-w-0">
         {/* Mobile topbar */}
         <header className="lg:hidden sticky top-0 z-20 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm">
           <button
@@ -167,7 +167,7 @@ export function AppLayout({ children, variant }: AppLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 max-w-6xl mx-auto w-full min-w-0 overflow-x-hidden">
+        <main className="flex-1 w-full min-w-0 overflow-x-hidden px-4 py-4 sm:px-6 sm:py-6 lg:px-8 max-w-7xl mx-auto">
           {children}
         </main>
       </div>

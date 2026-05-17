@@ -27,9 +27,14 @@ export function PredictionSelector({
   ];
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
       {options.map(({ choice, label, shortLabel }) => {
         const isSelected = value === choice;
+        const twoLineLabel = choice === 'HOME'
+          ? { first: 'Gana', second: 'Local' }
+          : choice === 'AWAY'
+            ? { first: 'Gana', second: 'Visitante' }
+            : null;
         return (
           <button
             key={choice}
@@ -38,8 +43,8 @@ export function PredictionSelector({
             onClick={() => !disabled && onChange?.(choice)}
             title={label}
             className={clsx(
-              'prediction-btn flex-1 min-w-0 rounded-xl font-semibold border-2 transition-all cursor-pointer flex items-center justify-center',
-              size === 'md' ? 'px-4 py-2.5 text-sm' : 'px-3 py-2 text-xs',
+              'prediction-btn w-full min-w-0 min-h-11 rounded-xl font-semibold border-2 transition-all cursor-pointer flex items-center justify-center text-center whitespace-normal break-words',
+              size === 'md' ? 'px-2 py-2 text-[10px] sm:px-4 sm:py-2.5 sm:text-sm' : 'px-2 py-2 text-[10px] sm:px-3 sm:py-2 sm:text-xs',
               isSelected
                 ? selectedClass[choice]
                 : 'bg-white border-slate-200 text-slate-700 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 shadow-sm hover:shadow-md',
@@ -48,7 +53,14 @@ export function PredictionSelector({
             aria-pressed={isSelected}
             aria-label={label}
           >
-            {size === 'md' ? label : shortLabel}
+            {twoLineLabel ? (
+              <span className="flex flex-col items-center leading-tight text-center">
+                <span className="text-[10px] sm:text-sm">{twoLineLabel.first}</span>
+                <span className="text-[10px] sm:text-sm font-medium opacity-90">{twoLineLabel.second}</span>
+              </span>
+            ) : (
+              <span className="text-[10px] sm:text-sm">{shortLabel}</span>
+            )}
           </button>
         );
       })}

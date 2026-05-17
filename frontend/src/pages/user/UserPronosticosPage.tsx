@@ -14,6 +14,7 @@ import type { Match, Prediction, PredictionChoice } from '../../types';
 export function UserPronosticosPage() {
   const { user } = useAuth();
   const { isOpen, isLoading: isStatusLoading } = useProdeStatus();
+  const allGroups = useMemo(() => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'], []);
   const [matches, setMatches] = useState<Match[]>([]);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
@@ -55,7 +56,7 @@ export function UserPronosticosPage() {
     };
   }, [user]);
 
-  const groups = useMemo(() => [...new Set(matches.map(match => match.group))].sort(), [matches]);
+  const groups = allGroups;
   const selectedGroup = groups.includes(activeGroup) ? activeGroup : groups[0] ?? '';
 
   const getPrediction = (matchId: string) => predictions.find(prediction => prediction.matchId === matchId);
@@ -118,10 +119,10 @@ export function UserPronosticosPage() {
         <>
           {!isOpen && <LockBanner />}
 
-          <div className="relative mb-6">
+          <div className="relative mb-6 min-w-0">
             <div
-              className="flex w-full max-w-full flex-nowrap gap-2 overflow-x-auto overflow-y-hidden pb-2 pr-8 whitespace-nowrap overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
+              className="flex w-full max-w-full min-w-0 flex-nowrap gap-2 overflow-x-auto overflow-y-hidden pb-2 pr-4 whitespace-nowrap overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y' }}
             >
               {groups.map(group => (
                 <button
@@ -138,7 +139,7 @@ export function UserPronosticosPage() {
               ))}
             </div>
             <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-slate-50 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-slate-50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-slate-50 to-transparent" />
           </div>
 
           {groupMatches.length === 0 ? (
@@ -148,7 +149,7 @@ export function UserPronosticosPage() {
               description="Los partidos se cargarán próximamente."
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
               {groupMatches.map(match => (
                 <MatchCard
                   key={match.id}

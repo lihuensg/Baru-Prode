@@ -155,7 +155,7 @@ function ResultMatchCard({
   onConfirmRequest: (match: Match) => void;
 }) {
   return (
-    <div className={`rounded-2xl border shadow-sm transition-all ${timeline.wrapperClass}`}>
+    <div className={`w-full max-w-full mx-auto rounded-2xl border shadow-sm transition-all ${timeline.wrapperClass}`}>
       <div className={`px-4 py-4 sm:px-5 sm:py-5 border-b ${timeline.headerClass}`}>
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -170,10 +170,16 @@ function ResultMatchCard({
 
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h3 className="font-black text-slate-900 text-sm sm:text-base break-words">
-                <span className="inline-flex align-middle mr-1"><FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" /></span>
-                {match.homeTeam} <span className="text-slate-400 font-semibold">vs</span> {match.awayTeam}
-                <span className="inline-flex align-middle ml-1"><FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" /></span>
+              <h3 className="font-black text-slate-900 text-sm sm:text-base break-words flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                <span className="inline-flex items-center gap-2 min-w-0">
+                  <FlagIcon teamName={match.homeTeam} fallback={match.homeFlag} size="sm" />
+                  <span className="break-words">{match.homeTeam}</span>
+                </span>
+                <span className="text-slate-400 font-semibold self-start sm:self-auto">vs</span>
+                <span className="inline-flex items-center gap-2 min-w-0">
+                  <span className="break-words">{match.awayTeam}</span>
+                  <FlagIcon teamName={match.awayTeam} fallback={match.awayFlag} size="sm" />
+                </span>
               </h3>
               <p className="text-xs text-slate-500 mt-1">{timeline.description}</p>
             </div>
@@ -474,7 +480,7 @@ export function AdminResultsPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {groupMatches.map(match => {
                 const timeline = getMatchTimelineState(match, resultBuckets.now);
                 return (

@@ -2,11 +2,17 @@
 @import "tailwindcss";
 
 /* Mobile / accessibility fixes to avoid unwanted zoom and horizontal scroll */
-html, body {
+html, body, #root {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%; /* prevent iOS from resizing text */
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
 }
 
 img, video, canvas, svg {
@@ -16,11 +22,13 @@ img, video, canvas, svg {
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 /* iOS zoom fix: inputs with font-size < 16px trigger automatic zoom. Set sensible minimum */
 input, select, textarea, button {
   font-size: 16px;
+  max-width: 100%;
 }
 
 /* Ensure interactive elements don't cause layout jumps on mobile */
